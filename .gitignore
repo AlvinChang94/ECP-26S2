@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 .claude/
 .vscode/
+=======
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+>>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791
 
 # dependencies
 /node_modules
@@ -28,7 +32,10 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+<<<<<<< HEAD
 !.env.example
+=======
+>>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791
 
 # vercel
 .vercel
@@ -36,9 +43,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+<<<<<<< HEAD
 
 # prisma generated client
 /src/generated/
 
 # generated exports (Excel files)
 /storage/
+=======
+>>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791

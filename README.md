@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 op# ECP
 
 ECP reads business documents (PDFs, images, Excel and ERP text reports), extracts their data with
@@ -287,3 +288,6 @@ PowerShell:
 Remove-Item -Recurse -Force node_modules
 npm ci
 ```
+=======
+# ECP-26S2
+>>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791

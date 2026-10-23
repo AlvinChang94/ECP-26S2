@@ -1,0 +1,90 @@
+[
+  {
+    "invoiceNo": "INV-9001",
+    "lineNo": 1,
+    "salesperson": "SP-01",
+    "sku": "WIDGET-A",
+    "quantity": "10",
+    "revenue": "1000.00",
+    "cost": "800.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "20.00"
+  },
+  {
+    "invoiceNo": "INV-9001",
+    "lineNo": 2,
+    "salesperson": "SP-01",
+    "sku": "FREE-MUG",
+    "quantity": "2",
+    "revenue": "0.00",
+    "cost": "12.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "0.00"
+  },
+  {
+    "invoiceNo": "INV-9002",
+    "lineNo": 1,
+    "salesperson": "SP-02",
+    "sku": "GADGET-B",
+    "quantity": "5",
+    "revenue": "500.00",
+    "cost": "520.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "0.00"
+  },
+  {
+    "invoiceNo": "INV-9002",
+    "lineNo": 2,
+    "salesperson": "SP-02",
+    "sku": "GADGET-C",
+    "quantity": "4",
+    "revenue": "1000.00",
+    "cost": "950.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "5.00"
+  },
+  {
+    "invoiceNo": "INV-9003",
+    "lineNo": 1,
+    "salesperson": "SP-01",
+    "sku": "PART-D",
+    "quantity": "20",
+    "revenue": "1000.00",
+    "cost": "940.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "0.00"
+  },
+  {
+    "invoiceNo": "INV-9003",
+    "lineNo": 2,
+    "salesperson": "SP-01",
+    "sku": "PART-E",
+    "quantity": "20",
+    "revenue": "1000.00",
+    "cost": "939.90",
+    "commissionRate": "0.10",
+    "commissionAmount": "6.01"
+  },
+  {
+    "invoiceNo": "INV-9004",
+    "lineNo": 1,
+    "salesperson": "SP-03",
+    "sku": "SAMPLE-KIT",
+    "quantity": "1",
+    "revenue": "0.00",
+    "cost": "45.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "4.50"
+  },
+  {
+    "invoiceNo": "INV-9004",
+    "lineNo": 2,
+    "salesperson": "SP-03",
+    "sku": "TOOL-F",
+    "quantity": "3",
+    "revenue": "1250.00",
+    "cost": "1300.00",
+    "commissionRate": "0.10",
+    "commissionAmount": "-5.00"
+  }
+]

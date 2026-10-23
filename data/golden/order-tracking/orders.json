@@ -1,0 +1,116 @@
+[
+  {
+    "orderNumber": "PO-1001",
+    "customerName": "Harbourline Trading Pte Ltd",
+    "orderDate": "2026-09-01",
+    "currency": "SGD",
+    "lines": [
+      {
+        "lineNo": 1,
+        "sku": "BOLT-M8-50",
+        "description": "Hex bolt M8 x 50mm, zinc",
+        "quantity": "500",
+        "uom": "PCS",
+        "unitPrice": "0.1200",
+        "weightKg": "25.000"
+      },
+      {
+        "lineNo": 2,
+        "sku": "NUT-M8",
+        "description": "Hex nut M8, zinc",
+        "quantity": "500",
+        "uom": "PCS",
+        "unitPrice": "0.0450",
+        "weightKg": "6.500"
+      },
+      {
+        "lineNo": 3,
+        "sku": "WASH-M8",
+        "description": "Flat washer M8",
+        "quantity": "1000",
+        "uom": "PCS",
+        "unitPrice": "0.0150",
+        "weightKg": "3.200"
+      }
+    ]
+  },
+  {
+    "orderNumber": "PO-1002",
+    "customerName": "Kestrel Foods Supply",
+    "orderDate": "2026-09-03",
+    "currency": "SGD",
+    "lines": [
+      {
+        "lineNo": 1,
+        "sku": "RICE-JAS-5KG",
+        "description": "Jasmine rice 5kg bag",
+        "quantity": "40",
+        "uom": "BAG",
+        "unitPrice": "12.5000",
+        "weightKg": "200.000"
+      },
+      {
+        "lineNo": 2,
+        "sku": "OIL-CAN-2L",
+        "description": "Canola oil 2L bottle",
+        "quantity": "24",
+        "uom": "BTL",
+        "unitPrice": "6.8000",
+        "weightKg": "48.000"
+      },
+      {
+        "lineNo": 3,
+        "sku": "SUGAR-1KG",
+        "description": "White sugar 1kg pack",
+        "quantity": "100",
+        "uom": "PCS",
+        "unitPrice": "1.8000",
+        "weightKg": "100.000"
+      }
+    ]
+  },
+  {
+    "orderNumber": "PO-1003",
+    "customerName": "Northgate Office Supplies",
+    "orderDate": "2026-09-05",
+    "currency": "SGD",
+    "lines": [
+      {
+        "lineNo": 1,
+        "sku": "PAPER-A4-80",
+        "description": "A4 copy paper 80gsm, carton of 5 reams",
+        "quantity": "10",
+        "uom": "CTN",
+        "unitPrice": "28.0000",
+        "weightKg": "125.000"
+      },
+      {
+        "lineNo": 2,
+        "sku": "TONER-BK-26",
+        "description": "Black toner cartridge, type 26",
+        "quantity": "6",
+        "uom": "PCS",
+        "unitPrice": "89.9000",
+        "weightKg": "7.200"
+      },
+      {
+        "lineNo": 3,
+        "sku": "STAPLER-HD",
+        "description": "Heavy-duty stapler",
+        "quantity": "4",
+        "uom": "PCS",
+        "unitPrice": "15.5000",
+        "weightKg": "3.400"
+      },
+      {
+        "lineNo": 4,
+        "sku": "PEN-BLU-12",
+        "description": "Blue ballpoint pens, box of 12",
+        "quantity": "20",
+        "uom": "BOX",
+        "unitPrice": "3.6000",
+        "weightKg": "4.000"
+      }
+    ]
+  }
+]

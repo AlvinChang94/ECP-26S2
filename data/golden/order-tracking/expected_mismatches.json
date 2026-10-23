@@ -1,0 +1,68 @@
+[
+  {
+    "orderNumber": "PO-1001",
+    "lineNo": 1,
+    "codes": [],
+    "note": "Clean line"
+  },
+  {
+    "orderNumber": "PO-1001",
+    "lineNo": 2,
+    "codes": ["QTY_MISMATCH"],
+    "note": "Planted: invoiced 480 instead of 500"
+  },
+  {
+    "orderNumber": "PO-1001",
+    "lineNo": 3,
+    "codes": [],
+    "note": "Clean despite formatting noise: lower-case SKU/UOM, trailing space, 1000.000 vs 1000, 0.015 vs 0.0150"
+  },
+  {
+    "orderNumber": "PO-1001",
+    "lineNo": 4,
+    "codes": ["LINE_NOT_ON_ORDER"],
+    "note": "Planted: invoice bills an M10 bolt line that was never ordered"
+  },
+  {
+    "orderNumber": "PO-1002",
+    "lineNo": 1,
+    "codes": ["UNIT_PRICE_MISMATCH"],
+    "note": "Planted: price 13.2500 instead of 12.5000"
+  },
+  {
+    "orderNumber": "PO-1002",
+    "lineNo": 2,
+    "codes": ["SKU_MISMATCH"],
+    "note": "Planted: 3L SKU delivered instead of 2L"
+  },
+  {
+    "orderNumber": "PO-1002",
+    "lineNo": 3,
+    "codes": ["QTY_MISMATCH", "UNIT_PRICE_MISMATCH"],
+    "note": "Planted: two errors on one line (90 @ 1.9000 instead of 100 @ 1.8000)"
+  },
+  {
+    "orderNumber": "PO-1003",
+    "lineNo": 1,
+    "codes": ["UOM_MISMATCH"],
+    "note": "Planted: 50 REAM vs 10 CTN; quantity is not also flagged"
+  },
+  {
+    "orderNumber": "PO-1003",
+    "lineNo": 2,
+    "codes": ["WEIGHT_MISMATCH"],
+    "note": "Planted: 7.950 kg vs 7.200 kg (10.4%, over the 2% tolerance)"
+  },
+  {
+    "orderNumber": "PO-1003",
+    "lineNo": 3,
+    "codes": [],
+    "note": "Clean: 3.450 kg vs 3.400 kg is 1.47%, within tolerance"
+  },
+  {
+    "orderNumber": "PO-1003",
+    "lineNo": 4,
+    "codes": ["LINE_MISSING_ON_DOCUMENT"],
+    "note": "Planted: pens ordered but not on the delivery order"
+  }
+]

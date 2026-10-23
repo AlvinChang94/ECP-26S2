@@ -1,0 +1,225 @@
+[
+  {
+    "orderNumber": "PO-1001",
+    "type": "INVOICE",
+    "originalFilename": "INV-HL-5521.pdf",
+    "s3Key": "golden/invoices/INV-HL-5521.pdf",
+    "fileHash": "14facfb56aa80782344c8b4cb13f6af1c82f7e3e3b9b062b570abc0be5b41c7f",
+    "modelId": "synthetic-golden",
+    "lines": [
+      {
+        "lineNo": 1,
+        "sku": "BOLT-M8-50",
+        "description": "Hex bolt M8 x 50mm",
+        "quantity": "500",
+        "uom": "PCS",
+        "unitPrice": "0.1200",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.99,
+          "quantity": 0.98,
+          "uom": 0.97,
+          "unitPrice": 0.98
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.08, 0.41, 0.84, 0.03]
+        }
+      },
+      {
+        "lineNo": 2,
+        "sku": "NUT-M8",
+        "description": "Hex nut M8",
+        "quantity": "480",
+        "uom": "PCS",
+        "unitPrice": "0.0450",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.99,
+          "quantity": 0.96,
+          "uom": 0.97,
+          "unitPrice": 0.98
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.08, 0.45, 0.84, 0.03]
+        }
+      },
+      {
+        "lineNo": 3,
+        "sku": "wash-m8 ",
+        "description": "Washer M8",
+        "quantity": "1000.000",
+        "uom": "pcs",
+        "unitPrice": "0.015",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.93,
+          "quantity": 0.97,
+          "uom": 0.95,
+          "unitPrice": 0.96
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.08, 0.49, 0.84, 0.03]
+        }
+      },
+      {
+        "lineNo": 4,
+        "sku": "BOLT-M10-60",
+        "description": "Hex bolt M10 x 60mm",
+        "quantity": "100",
+        "uom": "PCS",
+        "unitPrice": "0.2100",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.97,
+          "quantity": 0.98,
+          "uom": 0.97,
+          "unitPrice": 0.96
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.08, 0.53, 0.84, 0.03]
+        }
+      }
+    ],
+    "documentRef": "INV-HL-5521"
+  },
+  {
+    "orderNumber": "PO-1002",
+    "type": "INVOICE",
+    "originalFilename": "INV-KF-0877.pdf",
+    "s3Key": "golden/invoices/INV-KF-0877.pdf",
+    "fileHash": "0b5af52fa03f950cd0a7f6cdc068b66cf7b72dd15bc2b95934c9d77a1655299c",
+    "modelId": "synthetic-golden",
+    "lines": [
+      {
+        "lineNo": 1,
+        "sku": "RICE-JAS-5KG",
+        "description": "Jasmine rice 5kg",
+        "quantity": "40",
+        "uom": "BAG",
+        "unitPrice": "13.2500",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.99,
+          "quantity": 0.99,
+          "uom": 0.98,
+          "unitPrice": 0.95
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.07, 0.38, 0.86, 0.03]
+        }
+      },
+      {
+        "lineNo": 2,
+        "sku": "OIL-CAN-3L",
+        "description": "Canola oil 3L",
+        "quantity": "24",
+        "uom": "BTL",
+        "unitPrice": "6.8000",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.88,
+          "quantity": 0.99,
+          "uom": 0.98,
+          "unitPrice": 0.97
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.07, 0.42, 0.86, 0.03]
+        }
+      },
+      {
+        "lineNo": 3,
+        "sku": "SUGAR-1KG",
+        "description": "White sugar 1kg",
+        "quantity": "90",
+        "uom": "PCS",
+        "unitPrice": "1.9000",
+        "weightKg": null,
+        "confidence": {
+          "sku": 0.99,
+          "quantity": 0.94,
+          "uom": 0.97,
+          "unitPrice": 0.93
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.07, 0.46, 0.86, 0.03]
+        }
+      }
+    ],
+    "documentRef": "INV-KF-0877"
+  },
+  {
+    "orderNumber": "PO-1003",
+    "type": "DELIVERY_ORDER",
+    "originalFilename": "DO-NG-3310.pdf",
+    "s3Key": "golden/delivery-orders/DO-NG-3310.pdf",
+    "fileHash": "52631817728d21c88fb84b48dc8805a006d27ef1e83704cd4d368e9e6525b7a9",
+    "modelId": "synthetic-golden",
+    "lines": [
+      {
+        "lineNo": 1,
+        "sku": "PAPER-A4-80",
+        "description": "A4 paper 80gsm",
+        "quantity": "50",
+        "uom": "REAM",
+        "unitPrice": null,
+        "weightKg": "125.000",
+        "confidence": {
+          "sku": 0.98,
+          "quantity": 0.97,
+          "uom": 0.91,
+          "weightKg": 0.95
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.1, 0.35, 0.8, 0.04]
+        }
+      },
+      {
+        "lineNo": 2,
+        "sku": "TONER-BK-26",
+        "description": "Toner black 26",
+        "quantity": "6",
+        "uom": "PCS",
+        "unitPrice": null,
+        "weightKg": "7.950",
+        "confidence": {
+          "sku": 0.99,
+          "quantity": 0.99,
+          "uom": 0.98,
+          "weightKg": 0.9
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.1, 0.4, 0.8, 0.04]
+        }
+      },
+      {
+        "lineNo": 3,
+        "sku": "STAPLER-HD",
+        "description": "Stapler heavy duty",
+        "quantity": "4.000",
+        "uom": "PCS",
+        "unitPrice": null,
+        "weightKg": "3.450",
+        "confidence": {
+          "sku": 0.99,
+          "quantity": 0.98,
+          "uom": 0.98,
+          "weightKg": 0.92
+        },
+        "source": {
+          "page": 1,
+          "bbox": [0.1, 0.45, 0.8, 0.04]
+        }
+      }
+    ],
+    "documentRef": "DO-NG-3310"
+  }
+]

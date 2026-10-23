@@ -1,0 +1,80 @@
+[
+  {
+    "paymentId": "P-01",
+    "status": "MATCHED",
+    "method": "REFERENCE",
+    "allocations": [{ "invoiceNo": "INV-2001", "amount": "1250.00" }],
+    "reasonCodes": [],
+    "note": "Clean: exact amount, invoice referenced"
+  },
+  {
+    "paymentId": "P-02",
+    "status": "MATCHED",
+    "method": "REFERENCE",
+    "allocations": [
+      { "invoiceNo": "INV-2002", "amount": "830.40" },
+      { "invoiceNo": "INV-2003", "amount": "2000.00" }
+    ],
+    "reasonCodes": ["PAYMENT_WITHIN_TOLERANCE"],
+    "note": "Planted: one payment for two invoices, 2.00 short (bank charge), payer name is an alias, references written 'INV2002' and 'INV 2003'"
+  },
+  {
+    "paymentId": "P-03",
+    "status": "PARTIAL",
+    "method": "REFERENCE",
+    "allocations": [{ "invoiceNo": "INV-2006", "amount": "1700.00" }],
+    "reasonCodes": ["PAYMENT_PARTIAL"],
+    "note": "Planted: partial payment, half of INV-2006"
+  },
+  {
+    "paymentId": "P-04",
+    "status": "MATCHED",
+    "method": "AMOUNT_COMBINATION",
+    "allocations": [
+      { "invoiceNo": "INV-2006", "amount": "1700.00" },
+      { "invoiceNo": "INV-2007", "amount": "95.50" }
+    ],
+    "reasonCodes": ["PAYMENT_NO_REFERENCE"],
+    "note": "Planted: no reference; settles the rest of INV-2006 plus INV-2007 (only works because P-03 is applied first)"
+  },
+  {
+    "paymentId": "P-05",
+    "status": "AMBIGUOUS",
+    "method": null,
+    "allocations": [],
+    "reasonCodes": ["PAYMENT_AMBIGUOUS"],
+    "note": "Planted: no reference and two open invoices for the same amount"
+  },
+  {
+    "paymentId": "P-06",
+    "status": "UNMATCHED",
+    "method": null,
+    "allocations": [],
+    "reasonCodes": ["PAYMENT_UNMATCHED"],
+    "note": "Planted: payer is not a known customer"
+  },
+  {
+    "paymentId": "P-07",
+    "status": "OVERPAID",
+    "method": "REFERENCE",
+    "allocations": [],
+    "reasonCodes": ["PAYMENT_OVERPAID"],
+    "note": "Planted: duplicate payment of INV-2001, already settled by P-01"
+  },
+  {
+    "paymentId": "P-08",
+    "status": "UNMATCHED",
+    "method": null,
+    "allocations": [],
+    "reasonCodes": ["PAYMENT_UNMATCHED"],
+    "note": "Planted: known customer but no invoice or combination adds up to 999.00"
+  },
+  {
+    "paymentId": "P-09",
+    "status": "MATCHED",
+    "method": "AMOUNT_SINGLE",
+    "allocations": [{ "invoiceNo": "INV-2008", "amount": "300.00" }],
+    "reasonCodes": ["PAYMENT_NO_REFERENCE"],
+    "note": "Planted: no reference, unique amount match"
+  }
+]

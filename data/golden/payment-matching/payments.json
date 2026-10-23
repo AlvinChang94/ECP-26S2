@@ -1,0 +1,83 @@
+[
+  {
+    "paymentId": "P-01",
+    "payerName": "Harbourline Trading Pte Ltd",
+    "amount": "1250.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-01",
+    "reference": "INV-2001",
+    "sourceDocument": "bank-slip-0901.jpg"
+  },
+  {
+    "paymentId": "P-02",
+    "payerName": "HARBOURLINE TRDG PTE LTD",
+    "amount": "2828.40",
+    "currency": "SGD",
+    "valueDate": "2026-09-02",
+    "reference": "Payment for INV2002 & INV 2003",
+    "sourceDocument": "remittance-advice-0902.pdf"
+  },
+  {
+    "paymentId": "P-03",
+    "payerName": "Northgate Office Supplies",
+    "amount": "1700.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-03",
+    "reference": "INV-2006 part payment",
+    "sourceDocument": "paynow-screenshot-0903.png"
+  },
+  {
+    "paymentId": "P-04",
+    "payerName": "NORTHGATE OFFICE",
+    "amount": "1795.50",
+    "currency": "SGD",
+    "valueDate": "2026-09-04",
+    "reference": null,
+    "sourceDocument": "bank-statement-sep.pdf"
+  },
+  {
+    "paymentId": "P-05",
+    "payerName": "Kestrel Foods Supply",
+    "amount": "560.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-05",
+    "reference": null,
+    "sourceDocument": "bank-statement-sep.pdf"
+  },
+  {
+    "paymentId": "P-06",
+    "payerName": "Zephyr Marine Services",
+    "amount": "4321.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-06",
+    "reference": null,
+    "sourceDocument": "bank-statement-sep.pdf"
+  },
+  {
+    "paymentId": "P-07",
+    "payerName": "Harbourline Trading Pte Ltd",
+    "amount": "1250.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-08",
+    "reference": "INV-2001",
+    "sourceDocument": "bank-slip-0908.jpg"
+  },
+  {
+    "paymentId": "P-08",
+    "payerName": "KESTREL FOODS",
+    "amount": "999.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-09",
+    "reference": null,
+    "sourceDocument": "bank-statement-sep.pdf"
+  },
+  {
+    "paymentId": "P-09",
+    "payerName": "Kestrel Foods Supply",
+    "amount": "300.00",
+    "currency": "SGD",
+    "valueDate": "2026-09-10",
+    "reference": null,
+    "sourceDocument": "cheque-0910.jpg"
+  }
+]

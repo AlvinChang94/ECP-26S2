@@ -1,0 +1,50 @@
+[
+  {
+    "invoiceNo": "INV-2001",
+    "customerCode": "C001",
+    "issueDate": "2026-08-01",
+    "amountDue": "1250.00"
+  },
+  {
+    "invoiceNo": "INV-2002",
+    "customerCode": "C001",
+    "issueDate": "2026-08-05",
+    "amountDue": "830.40"
+  },
+  {
+    "invoiceNo": "INV-2003",
+    "customerCode": "C001",
+    "issueDate": "2026-08-10",
+    "amountDue": "2000.00"
+  },
+  {
+    "invoiceNo": "INV-2004",
+    "customerCode": "C002",
+    "issueDate": "2026-08-03",
+    "amountDue": "560.00"
+  },
+  {
+    "invoiceNo": "INV-2005",
+    "customerCode": "C002",
+    "issueDate": "2026-08-12",
+    "amountDue": "560.00"
+  },
+  {
+    "invoiceNo": "INV-2008",
+    "customerCode": "C002",
+    "issueDate": "2026-08-20",
+    "amountDue": "300.00"
+  },
+  {
+    "invoiceNo": "INV-2006",
+    "customerCode": "C003",
+    "issueDate": "2026-08-07",
+    "amountDue": "3400.00"
+  },
+  {
+    "invoiceNo": "INV-2007",
+    "customerCode": "C003",
+    "issueDate": "2026-08-15",
+    "amountDue": "95.50"
+  }
+]

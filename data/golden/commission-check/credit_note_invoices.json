@@ -1,0 +1,65 @@
+[
+  {
+    "invoiceNo": "INV-9101",
+    "salesperson": "SP-01",
+    "revenue": "2000.00",
+    "cost": "1500.00",
+    "commissionRate": "0.10",
+    "commissionPaid": "50.00",
+    "customerPaid": "1800.00",
+    "creditNotes": [{ "creditNoteNo": "CN-1", "revenue": "200.00", "cost": "0.00" }]
+  },
+  {
+    "invoiceNo": "INV-9102",
+    "salesperson": "SP-02",
+    "revenue": "1000.00",
+    "cost": "900.00",
+    "commissionRate": "0.10",
+    "commissionPaid": "10.00",
+    "customerPaid": "940.00",
+    "creditNotes": [{ "creditNoteNo": "CN-2", "revenue": "60.00", "cost": "0.00" }]
+  },
+  {
+    "invoiceNo": "INV-9103",
+    "salesperson": "SP-01",
+    "revenue": "3000.00",
+    "cost": "2100.00",
+    "commissionRate": "0.10",
+    "commissionPaid": "90.00",
+    "customerPaid": "1200.00",
+    "creditNotes": [{ "creditNoteNo": "CN-3", "revenue": "600.00", "cost": "420.00" }]
+  },
+  {
+    "invoiceNo": "INV-9104",
+    "salesperson": "SP-03",
+    "revenue": "500.00",
+    "cost": "300.00",
+    "commissionRate": "0.10",
+    "commissionPaid": "0.00",
+    "customerPaid": "500.00",
+    "creditNotes": []
+  },
+  {
+    "invoiceNo": "INV-9105",
+    "salesperson": "SP-02",
+    "revenue": "1000.00",
+    "cost": "700.00",
+    "commissionRate": "0.10",
+    "commissionPaid": "30.00",
+    "customerPaid": "425.00",
+    "creditNotes": [
+      { "creditNoteNo": "CN-4", "revenue": "100.00", "cost": "70.00" },
+      { "creditNoteNo": "CN-5", "revenue": "50.00", "cost": "0.00" }
+    ]
+  },
+  {
+    "invoiceNo": "INV-9106",
+    "salesperson": "SP-03",
+    "revenue": "1200.00",
+    "cost": "900.00",
+    "commissionRate": "0.10",
+    "commissionPaid": "27.00",
+    "customerPaid": "1080.00",
+    "creditNotes": [{ "creditNoteNo": "CN-6", "revenue": "120.00", "cost": "90.00" }]
+  }
+]

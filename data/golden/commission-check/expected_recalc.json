@@ -1,0 +1,80 @@
+[
+  {
+    "invoiceNo": "INV-9101",
+    "netRevenue": "1800.00",
+    "netGrossProfit": "300.00",
+    "gpPct": "0.1667",
+    "eligible": true,
+    "paidRatio": "1.0000",
+    "earnedCommission": "30.00",
+    "clawback": "20.00",
+    "topUp": "0.00",
+    "reasonCodes": ["CLAWBACK_REQUIRED"],
+    "note": "Planted: 200.00 price credit cuts GP from 500 to 300; commission 50.00 paid on the original GP"
+  },
+  {
+    "invoiceNo": "INV-9102",
+    "netRevenue": "940.00",
+    "netGrossProfit": "40.00",
+    "gpPct": "0.0426",
+    "eligible": false,
+    "paidRatio": "1.0000",
+    "earnedCommission": "0.00",
+    "clawback": "10.00",
+    "topUp": "0.00",
+    "reasonCodes": ["CREDIT_NOTE_DROPS_GP_BELOW_THRESHOLD", "CLAWBACK_REQUIRED"],
+    "note": "Planted: credit note pushes GP from 10% to 4.26%, so all commission is clawed back"
+  },
+  {
+    "invoiceNo": "INV-9103",
+    "netRevenue": "2400.00",
+    "netGrossProfit": "720.00",
+    "gpPct": "0.3000",
+    "eligible": true,
+    "paidRatio": "0.5000",
+    "earnedCommission": "36.00",
+    "clawback": "54.00",
+    "topUp": "0.00",
+    "reasonCodes": ["CLAWBACK_REQUIRED"],
+    "note": "Planted: goods returned and customer has paid only half of the net amount, so commission is prorated to 50%"
+  },
+  {
+    "invoiceNo": "INV-9104",
+    "netRevenue": "500.00",
+    "netGrossProfit": "200.00",
+    "gpPct": "0.4000",
+    "eligible": true,
+    "paidRatio": "1.0000",
+    "earnedCommission": "20.00",
+    "clawback": "0.00",
+    "topUp": "20.00",
+    "reasonCodes": ["COMMISSION_UNDERPAID"],
+    "note": "Planted: fully paid, no credit note, but commission never paid out"
+  },
+  {
+    "invoiceNo": "INV-9105",
+    "netRevenue": "850.00",
+    "netGrossProfit": "220.00",
+    "gpPct": "0.2588",
+    "eligible": true,
+    "paidRatio": "0.5000",
+    "earnedCommission": "11.00",
+    "clawback": "19.00",
+    "topUp": "0.00",
+    "reasonCodes": ["CLAWBACK_REQUIRED"],
+    "note": "Planted: two credit notes (a return and a price credit) plus a half-paid invoice"
+  },
+  {
+    "invoiceNo": "INV-9106",
+    "netRevenue": "1080.00",
+    "netGrossProfit": "270.00",
+    "gpPct": "0.2500",
+    "eligible": true,
+    "paidRatio": "1.0000",
+    "earnedCommission": "27.00",
+    "clawback": "0.00",
+    "topUp": "0.00",
+    "reasonCodes": [],
+    "note": "Clean: commission was already paid on the net amount after the credit note"
+  }
+]

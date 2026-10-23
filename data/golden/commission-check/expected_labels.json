@@ -1,0 +1,66 @@
+[
+  {
+    "invoiceNo": "INV-9001",
+    "lineNo": 1,
+    "label": null,
+    "gpPct": "0.2000",
+    "reasonCodes": [],
+    "note": "Clean: 20% GP, commission paid"
+  },
+  {
+    "invoiceNo": "INV-9001",
+    "lineNo": 2,
+    "label": "FREE_ITEM",
+    "gpPct": null,
+    "reasonCodes": ["FREE_ITEM"],
+    "note": "Planted: free mug (no revenue) is FREE_ITEM, not NEGATIVE_GP"
+  },
+  {
+    "invoiceNo": "INV-9002",
+    "lineNo": 1,
+    "label": "NEGATIVE_GP",
+    "gpPct": "-0.0400",
+    "reasonCodes": ["NEGATIVE_GP"],
+    "note": "Planted: sold below cost"
+  },
+  {
+    "invoiceNo": "INV-9002",
+    "lineNo": 2,
+    "label": "LOW_GP",
+    "gpPct": "0.0500",
+    "reasonCodes": ["LOW_GP", "COMMISSION_PAID_ON_INELIGIBLE_LINE"],
+    "note": "Planted: 5% GP but the ERP still paid 5.00 commission"
+  },
+  {
+    "invoiceNo": "INV-9003",
+    "lineNo": 1,
+    "label": "LOW_GP",
+    "gpPct": "0.0600",
+    "reasonCodes": ["LOW_GP"],
+    "note": "Boundary: exactly 6.00% is not above 6%, so no commission"
+  },
+  {
+    "invoiceNo": "INV-9003",
+    "lineNo": 2,
+    "label": null,
+    "gpPct": "0.0601",
+    "reasonCodes": [],
+    "note": "Boundary: 6.01% is above 6%, eligible"
+  },
+  {
+    "invoiceNo": "INV-9004",
+    "lineNo": 1,
+    "label": "FREE_ITEM",
+    "gpPct": null,
+    "reasonCodes": ["FREE_ITEM", "COMMISSION_PAID_ON_INELIGIBLE_LINE"],
+    "note": "Planted: free sample kit with 4.50 commission paid"
+  },
+  {
+    "invoiceNo": "INV-9004",
+    "lineNo": 2,
+    "label": "NEGATIVE_GP",
+    "gpPct": "-0.0400",
+    "reasonCodes": ["NEGATIVE_GP"],
+    "note": "Negative GP; ERP shows a -5.00 commission reversal (trailing minus in the text report)"
+  }
+]

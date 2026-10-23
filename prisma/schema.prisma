@@ -1,0 +1,212 @@
+// Statement-agnostic core schema. Schema changes only via `npm run db:migrate`.
+// Money, quantities, weights and percentages are DECIMAL columns, never float. Inside JSON
+// columns (fields, params, details) they are decimal strings such as "0.06" or "1250.00".
+// Problem-statement tables (orders, invoices, payments, commissions) are deliberately not
+// here yet; they come once a statement is chosen.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum DocumentStatus {
+  RECEIVED
+  EXTRACTING
+  EXTRACTED
+  FAILED
+}
+
+enum OriginChannel {
+  UPLOAD
+  EMAIL
+  ERP_EXPORT
+  BANK_FEED
+  SEED
+}
+
+enum PartyType {
+  CUSTOMER
+  VENDOR
+  SALESPERSON
+  BANK
+  OTHER
+}
+
+enum Severity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum FindingStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+  DISMISSED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+model Document {
+  id               BigInt         @id @default(autoincrement())
+  type             String         @db.VarChar(64) // e.g. PURCHASE_ORDER, BANK_SLIP, ERP_SALES_REPORT
+  s3Key            String         @map("s3_key") @db.VarChar(1024)
+  fileHash         String         @unique @map("file_hash") @db.Char(64) // sha256 hex
+  originalFilename String         @map("original_filename") @db.VarChar(255)
+  mimeType         String?        @map("mime_type") @db.VarChar(128)
+  originChannel    OriginChannel  @map("origin_channel")
+  status           DocumentStatus @default(RECEIVED)
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  extractions Extraction[]
+
+  @@index([type, status])
+  @@map("documents")
+}
+
+model Extraction {
+  id              BigInt   @id @default(autoincrement())
+  documentId      BigInt   @map("document_id")
+  schemaName      String   @map("schema_name") @db.VarChar(64)
+  schemaVersion   Int      @map("schema_version")
+  ingestor        String   @db.VarChar(32) // document-ai | spreadsheet | text-report
+  modelId         String?  @map("model_id") @db.VarChar(255) // only for document-ai
+  fields          Json // normalised records
+  fieldConfidence Json     @map("field_confidence") // { [fieldPath]: 0..1 }
+  fieldSources    Json     @map("field_sources") // { [fieldPath]: { page, bbox } | { sheet, row } | { line } }
+  fromCache       Boolean  @default(false) @map("from_cache")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId, schemaName, schemaVersion])
+  @@map("extractions")
+}
+
+model Party {
+  id        BigInt    @id @default(autoincrement())
+  type      PartyType
+  code      String    @db.VarChar(64)
+  name      String    @db.VarChar(255)
+  aliases   Json // string[] of alternative names seen on documents and bank slips
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@unique([type, code])
+  @@map("parties")
+}
+
+model Finding {
+  id             BigInt        @id @default(autoincrement())
+  subjectType    String        @map("subject_type") @db.VarChar(64)
+  subjectId      String        @map("subject_id") @db.VarChar(128)
+  ruleCode       String        @map("rule_code") @db.VarChar(64)
+  reasonCode     String        @map("reason_code") @db.VarChar(64)
+  severity       Severity
+  explanation    String        @db.Text
+  details        Json
+  status         FindingStatus @default(OPEN)
+  resolutionNote String?       @map("resolution_note") @db.Text
+  resolvedBy     String?       @map("resolved_by") @db.VarChar(255)
+  resolvedAt     DateTime?     @map("resolved_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  @@index([subjectType, subjectId])
+  @@index([status, severity])
+  @@map("findings")
+}
+
+model Approval {
+  id          BigInt         @id @default(autoincrement())
+  subjectType String         @map("subject_type") @db.VarChar(64)
+  subjectId   String         @map("subject_id") @db.VarChar(128)
+  requestedBy String         @map("requested_by") @db.VarChar(255)
+  decidedBy   String?        @map("decided_by") @db.VarChar(255)
+  status      ApprovalStatus @default(PENDING)
+  comment     String?        @db.Text
+  decidedAt   DateTime?      @map("decided_at")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  @@index([subjectType, subjectId])
+  @@index([status])
+  @@map("approvals")
+}
+
+model Job {
+  id          BigInt    @id @default(autoincrement())
+  type        String    @db.VarChar(64)
+  payload     Json
+  status      JobStatus @default(PENDING)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3) @map("max_attempts")
+  runAfter    DateTime  @default(now()) @map("run_after")
+  lockedAt    DateTime? @map("locked_at")
+  lastError   String?   @map("last_error") @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([status, runAfter])
+  @@map("jobs")
+}
+
+model AuditLog {
+  id         BigInt   @id @default(autoincrement())
+  entityType String   @map("entity_type") @db.VarChar(64)
+  entityId   String   @map("entity_id") @db.VarChar(128)
+  action     String   @db.VarChar(64)
+  actor      String   @db.VarChar(255)
+  before     Json?
+  after      Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@map("audit_log")
+}
+
+model Export {
+  id          BigInt   @id @default(autoincrement())
+  kind        String   @db.VarChar(64) // what was generated, e.g. PAYMENT_CONSOLIDATION
+  description String   @db.VarChar(255)
+  fileName    String   @map("file_name") @db.VarChar(255)
+  storagePath String   @map("storage_path") @db.VarChar(1024) // local path or s3:// key
+  fileHash    String   @map("file_hash") @db.Char(64) // sha256 hex
+  sizeBytes   Int      @map("size_bytes")
+  rowCount    Int      @map("row_count")
+  params      Json // inputs used to generate it, for reproducibility
+  createdBy   String   @map("created_by") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([kind])
+  @@map("exports")
+}
+
+model RuleConfig {
+  id          BigInt   @id @default(autoincrement())
+  ruleCode    String   @unique @map("rule_code") @db.VarChar(64)
+  params      Json // decimal values as strings, e.g. { "minGpPct": "0.06" }
+  enabled     Boolean  @default(true)
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("rule_configs")
+}

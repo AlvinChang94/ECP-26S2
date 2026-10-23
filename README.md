@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-op# ECP
+ECP
 
 ECP reads business documents (PDFs, images, Excel and ERP text reports), extracts their data with
 AWS AI services, and runs deterministic rules over it to raise findings for review and approval.
@@ -69,7 +68,7 @@ password when asked.
 mysql -u root -p < scripts/init_db.sql
 ```
 
-PowerShell doesn't support `<`. Use this instead:
+PowerShell doesn't support `<` Use this instead:
 
 ```powershell
 Get-Content scripts/init_db.sql | mysql -u root -p
@@ -81,27 +80,7 @@ Get-Content scripts/init_db.sql | mysql -u root -p
 npm ci
 ```
 
-**4. Create your `.env` file** from the template:
-
-```bash
-cp .env.example .env
-```
-
-(PowerShell: `Copy-Item .env.example .env`)
-
-Open `.env` and fill it in:
-
-| Variable                                     | What to put                                                                                                                          |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `DATABASE_URL`                               | Leave as is: `mysql://ecp_user:password@localhost:3306/ecp`                                                                          |
-| `SHADOW_DATABASE_URL`                        | Leave as is: `mysql://ecp_user:password@localhost:3306/ecp_shadow`                                                                   |
-| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | Your personal AWS access keys. Ask the team lead to create them for you and send them privately (never in a group chat or a commit). |
-| `AWS_REGION`                                 | Leave as `ap-southeast-1`                                                                                                            |
-| `S3_BUCKET`                                  | Bucket name from the team lead                                                                                                       |
-| `BEDROCK_MODEL_ID`                           | Model ID from the team lead (everyone uses the same pinned ID)                                                                       |
-| `REPLAY_MODE`                                | `false` normally; `true` to use only cached extraction results (offline demo)                                                        |
-
-The app checks these on startup and tells you exactly which ones are missing or wrong.
+**4. Ask me for the .env file to send to you
 
 **5. Create the tables** (applies all migrations in `prisma/migrations/`):
 

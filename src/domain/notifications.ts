@@ -226,6 +226,16 @@ function listInWords(labels: string[]): string {
   return `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
 }
 
+/** The Outbox key of a due-date alert. The due date is part of it: if the due date moves, the alert for the new date is written again. */
+export function documentDueAlertKey(shipmentNo: string, dueAt: Date, overdue: boolean): string {
+  return `doc-due:${shipmentNo}:${dueAt.toISOString()}:${overdue ? "overdue" : "soon"}`;
+}
+
+/** The Outbox key of a ship-date alert: one per order and promised date. */
+export function shipDateAlertKey(orderNo: string, promisedShipDate: string): string {
+  return `ship-date:${orderNo}:${promisedShipDate}`;
+}
+
 /** One alert per shipment and stage (due soon, overdue) that names every required document still missing. */
 export function buildDocumentDueAlert(
   owner: Recipient,
@@ -249,8 +259,7 @@ export function buildDocumentDueAlert(
     entityType: "shipment",
     entityId: data.shipmentNo,
     orderNo: data.orderNo,
-    // The due date is part of the key: if the due date moves, the alert for the new date is written again.
-    dedupeKey: `doc-due:${data.shipmentNo}:${data.dueAt.toISOString()}:${data.overdue ? "overdue" : "soon"}`,
+    dedupeKey: documentDueAlertKey(data.shipmentNo, data.dueAt, data.overdue),
   };
 }
 
@@ -306,6 +315,6 @@ export function buildShipDateAlert(
     entityType: "order",
     entityId: data.orderNo,
     orderNo: data.orderNo,
-    dedupeKey: `ship-date:${data.orderNo}:${data.promisedShipDate}`,
+    dedupeKey: shipDateAlertKey(data.orderNo, data.promisedShipDate),
   };
 }

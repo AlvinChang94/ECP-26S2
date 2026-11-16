@@ -60,6 +60,8 @@ export const AUDIT_ACTIONS = [
   "document_requested",
   "shipment_assigned",
   "due_date_alert",
+  // order dashboard
+  "ship_date_alert",
   // system
   "jobs_run",
   "clock_changed",

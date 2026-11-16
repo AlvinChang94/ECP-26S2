@@ -4,6 +4,7 @@
 import { SYSTEM_ACTOR } from "@/domain/audit";
 import { recordAudit } from "./audit";
 import type { Deps } from "./deps";
+import { shipDateAlertSweep } from "./orderDashboard";
 import { latePayerDraftSweep, vendorPaymentReminderSweep } from "./payments";
 import { documentDueAlertSweep } from "./shipments";
 import { sprEscalationJob, sprReminderJob } from "./spr";
@@ -23,7 +24,7 @@ const JOB_HANDLERS: Record<string, JobHandler> = {
 };
 
 /** Checks that run on every call. Each must be safe to repeat: the Outbox dedupe key stops double sending. */
-const SWEEPS: Sweep[] = [vendorPaymentReminderSweep, latePayerDraftSweep, documentDueAlertSweep];
+const SWEEPS: Sweep[] = [vendorPaymentReminderSweep, latePayerDraftSweep, documentDueAlertSweep, shipDateAlertSweep];
 
 export type JobsSummary = { ranAt: Date; lines: string[] };
 

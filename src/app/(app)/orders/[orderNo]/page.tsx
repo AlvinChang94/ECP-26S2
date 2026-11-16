@@ -1,4 +1,4 @@
-// What: the page of one order: what was exported, delivered and remaining quantities, PO versions, and the timeline.
+// What: the page of one order: where it stands (status, owner, next action, tasks), what was exported, deliveries, PO versions, and the timeline.
 // Who calls it: the order dashboard, the Inbox and the review and preview pages link here.
 // To extend: status, owner and next action (story 6) are derived in src/domain/order and shown at the top of this page.
 import Link from "next/link";
@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { readMessages } from "@/app/_lib/forms";
 import { requirePersona } from "@/app/_lib/session";
 import { Notices } from "@/components/Notices";
+import { OrderStatusBadge, ShipRiskBadge } from "@/components/OrderBadges";
 import { PageHeader } from "@/components/PageHeader";
 import { Timeline } from "@/components/Timeline";
 import { displayMoney } from "@/domain/money";
@@ -14,6 +15,7 @@ import { listOrderTimeline } from "@/services/audit";
 import { getDeps } from "@/services/deps";
 import { UserError } from "@/services/errors";
 import { getFulfilment } from "@/services/fulfilment";
+import { getOrderOverview } from "@/services/orderDashboard";
 import { getOrder, listPoVersions } from "@/services/orders";
 import { exportedOrderFile } from "@/services/poExport";
 import { recordDeliveryAction } from "./actions";
@@ -45,6 +47,8 @@ export default async function OrderPage(props: PageProps<"/orders/[orderNo]">) {
   const exported = await exportedOrderFile(deps, orderNo);
   const fulfilment = await getFulfilment(deps, orderNo);
   const timeline = await listOrderTimeline(deps, orderNo);
+  const overview = await getOrderOverview(deps, orderNo);
+  const status = overview.result;
   const current = versions.find((version) => version.id === order.currentPoVersionId);
   const open = order.status === "open";
   const canRecordDelivery = open && (persona.role === "sales" || persona.role === "purchase");
@@ -78,6 +82,88 @@ export default async function OrderPage(props: PageProps<"/orders/[orderNo]">) {
           Cancelled by {order.cancelledBy} on {formatDateTime(order.cancelledAt)}. Reason: {order.cancelReason}
         </div>
       ) : null}
+
+      {/* Story 6: status, owner, delay reason and next action are derived, never typed in. */}
+      <div className="card" data-testid="order-status">
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <h2 style={{ margin: 0 }}>Where this order stands</h2>
+          <span className="row">
+            <OrderStatusBadge status={status.status} />
+            <ShipRiskBadge risk={status.shipRisk} />
+          </span>
+        </div>
+        <table className="table" style={{ marginTop: 8 }}>
+          <tbody>
+            <tr>
+              <td className="muted" style={{ width: "22%" }}>
+                Owner
+              </td>
+              <td data-testid="owner">{status.owner ?? "nobody: nothing is left to do"}</td>
+            </tr>
+            <tr>
+              <td className="muted">Next action</td>
+              <td data-testid="next-action">{status.nextAction}</td>
+            </tr>
+            {status.blockerReason ? (
+              <tr>
+                <td className="muted">What holds it up</td>
+                <td data-testid="delay-reason">{status.blockerReason}</td>
+              </tr>
+            ) : null}
+            <tr>
+              <td className="muted">Promised ship date</td>
+              <td>
+                {order.promisedShipDate ? formatDate(order.promisedShipDate) : "not set yet"}
+                {status.shipRiskNote ? <span className="muted"> · {status.shipRiskNote}</span> : null}
+              </td>
+            </tr>
+            <tr>
+              <td className="muted">Update for the customer</td>
+              <td>
+                <span className="readonly-value" data-testid="customer-update">
+                  {overview.customerUpdate}
+                </span>
+                <div className="muted small">Written from a fixed template. Copy it into your reply; nothing is sent from here.</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        {status.tasks.length > 0 ? (
+          <table className="table" data-testid="order-tasks">
+            <thead>
+              <tr>
+                <th>Open task</th>
+                <th>Assigned to</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {status.tasks.map((task) => (
+                <tr key={`${task.href}-${task.title}`}>
+                  <td>{task.title}</td>
+                  <td>{task.assignee}</td>
+                  <td className="right">
+                    <Link href={task.href}>Open</Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : null}
+        {overview.shipments.length > 0 ? (
+          <p className="muted small" style={{ marginTop: 8 }}>
+            Shipments for this order:{" "}
+            {overview.shipments.map((view, index) => (
+              <span key={view.shipment.shipmentNo}>
+                {index > 0 ? ", " : ""}
+                <Link href={`/shipments/${view.shipment.shipmentNo}`}>
+                  {view.shipment.shipmentNo} ({view.direction === "inbound" ? "incoming" : "outgoing"}, {view.reference})
+                </Link>
+              </span>
+            ))}
+          </p>
+        ) : null}
+      </div>
 
       <div className="grid-2">
         <div>

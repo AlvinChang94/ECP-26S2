@@ -7,7 +7,7 @@ import { DOCUMENT_SPECS, type DocumentType, documentTypeLabel, type ExtractedFie
 import type { FieldEdit, FieldValues } from "@/domain/fields";
 import { attachDecisions, type Flag, flagTitle, type FlagWithDecision, makeFlag, sortFlags, validateDecisionInput } from "@/domain/flags";
 import type { NavGoodsReceipt, NavPurchaseOrder, StaffMember } from "@/domain/navision";
-import { buildDocumentDueAlert, buildDocumentRequest, buildTaskAssigned } from "@/domain/notifications";
+import { buildDocumentDueAlert, buildDocumentRequest, buildTaskAssigned, documentDueAlertKey } from "@/domain/notifications";
 import { normalizeReference } from "@/domain/payment/matching";
 import {
   assessShipment,
@@ -21,7 +21,7 @@ import {
   SHIPMENT_DOCUMENT_TYPES,
   type ShipmentStatus,
 } from "@/domain/shipment/assess";
-import { formatDateTime, startOfBusinessDay } from "@/domain/time";
+import { addHours, formatDateTime, startOfBusinessDay } from "@/domain/time";
 import { listEntityTimeline, recordAudit } from "./audit";
 import { nextReference } from "./counters";
 import type { Deps } from "./deps";
@@ -618,11 +618,19 @@ async function ownerOf(deps: Pick<Deps, "navision">, view: ShipmentView): Promis
  */
 export async function documentDueAlertSweep(deps: Deps, now: Date): Promise<string[]> {
   const lines: string[] = [];
-  for (const view of await listShipments(deps, now)) {
-    if (!view.dueAt) continue;
-    const target = await currentTarget(deps, view.shipment);
-    if (target) await refreshShipmentRow(deps, view.shipment, target);
+  for (const shipment of await deps.db.shipment.findMany({ orderBy: { shipmentNo: "asc" } })) {
+    // Read the due date fresh (cheap) and skip the full check when no alert can be due.
+    const target = await currentTarget(deps, shipment);
+    const row = target ? await refreshShipmentRow(deps, shipment, target) : shipment;
+    const dueAt = target ? target.dueAt : shipment.dueDate;
+    if (!dueAt) continue;
+    if (now.getTime() < addHours(dueAt, -deps.config.documentAlertWindowHours).getTime()) continue;
+    const overdueNow = now.getTime() >= dueAt.getTime();
+    const alreadySent = await deps.db.outboxMessage.findUnique({ where: { dedupeKey: documentDueAlertKey(shipment.shipmentNo, dueAt, overdueNow) } });
+    if (alreadySent) continue;
 
+    const view = await loadShipmentView(deps, row, now);
+    if (!view.dueAt) continue;
     for (const code of ["DOCUMENT_DUE_SOON", "DOCUMENT_OVERDUE"] as const) {
       // A finding a person already recorded an outcome for needs no further reminder.
       const open = view.flags.filter((flag) => flag.code === code && flag.decision === null);

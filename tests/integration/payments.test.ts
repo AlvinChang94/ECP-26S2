@@ -204,12 +204,14 @@ describe("payment reminders for late payers", () => {
 
   it("is drafted automatically once when an order becomes late, and never sent automatically", async () => {
     const orderNo = await exportedOrder(workspace.deps);
+    // The unpaid order also gets a ship-date alert as its promised date comes near (story 6, tested in orderDashboard.test.ts).
+    const reminderLines = async (): Promise<string[]> => (await runDueJobs(workspace.deps)).lines.filter((line) => line.includes("payment reminder"));
     workspace.clock.advanceHours(6 * 24);
-    expect((await runDueJobs(workspace.deps)).lines).toEqual([]);
+    expect(await reminderLines()).toEqual([]);
     workspace.clock.advanceHours(2 * 24);
-    expect((await runDueJobs(workspace.deps)).lines).toEqual([`${orderNo}: payment reminder drafted for Finance to review (8 days waiting).`]);
+    expect(await reminderLines()).toEqual([`${orderNo}: payment reminder drafted for Finance to review (8 days waiting).`]);
     workspace.clock.advanceHours(24);
-    expect((await runDueJobs(workspace.deps)).lines).toEqual([]);
+    expect(await reminderLines()).toEqual([]);
     const drafts = await listOutbox(workspace.deps, { type: "customer_payment_reminder" });
     expect(drafts.map((draft) => draft.status)).toEqual(["draft"]);
   });

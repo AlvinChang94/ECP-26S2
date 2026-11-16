@@ -11,6 +11,7 @@ import type { Deps } from "./deps";
 import { getDocument, workingType } from "./documents";
 import { requireThat, UserError } from "./errors";
 import { attachPoDocument, detachPoDocument } from "./orders";
+import { detachProof, registerProof } from "./payments";
 
 const MAX_PDF_BYTES = 15 * 1024 * 1024;
 
@@ -29,6 +30,8 @@ export type IntakeResult = {
   documentId: string;
   /** Id of an earlier document with exactly the same bytes, if there is one. */
   sameFileAs: string | null;
+  /** Where the document went, when its type was confirmed during intake (the uploader chose the type). */
+  route: RouteResult | null;
 };
 
 function referenceOf(type: DocumentType | null, fields: ExtractedField[]): string | null {
@@ -88,8 +91,8 @@ export async function ingestDocument(deps: Deps, actor: Actor, input: IntakeInpu
         : `; detected as ${documentTypeLabel(classification.type)} (${document.detectedConfidence}% sure).`),
   });
 
-  if (input.chosenType) await confirmDocumentType(deps, actor, document.id, input.chosenType);
-  return { documentId: document.id, sameFileAs: earlier?.id ?? null };
+  const route = input.chosenType ? await confirmDocumentType(deps, actor, document.id, input.chosenType) : null;
+  return { documentId: document.id, sameFileAs: earlier?.id ?? null, route };
 }
 
 // ---------------------------------------------------------------------------------------- Inbox (simulated email and WhatsApp)
@@ -137,23 +140,36 @@ export type RouteResult = {
   kind: RouteKind;
   /** Order number, payment proof id or shipment number the document now belongs to. Null when it was only filed. */
   routedId: string | null;
+  /** The page where work on this document continues. Null means its own document page. */
+  path: string | null;
 };
 
+type Routed = { routedId: string | null; path: string | null };
+
 type Router = {
-  attach(deps: Deps, actor: Actor, document: DocumentRow): Promise<string | null>;
+  attach(deps: Deps, actor: Actor, document: DocumentRow): Promise<Routed>;
   detach(deps: Deps, actor: Actor, document: DocumentRow): Promise<void>;
 };
 
 /** Document types whose workflow is not built yet are filed: stored, shown, and nothing else. */
-const FILE_ONLY: Router = { attach: async () => null, detach: async () => undefined };
+const FILE_ONLY: Router = { attach: async () => ({ routedId: null, path: null }), detach: async () => undefined };
 
-/** One router per destination. Payment and shipment routers are added by stories 4 and 5. */
+/** One router per destination. The shipment router is added by story 5. */
 const ROUTERS: Record<RouteKind, Router> = {
   order: {
-    attach: async (deps, actor, document) => (await attachPoDocument(deps, actor, document)).orderNo,
+    attach: async (deps, actor, document) => {
+      const { orderNo } = await attachPoDocument(deps, actor, document);
+      return { routedId: orderNo, path: `/orders/${orderNo}/review` };
+    },
     detach: detachPoDocument,
   },
-  payment: FILE_ONLY,
+  payment: {
+    attach: async (deps, actor, document) => {
+      const { proofId, orderNo } = await registerProof(deps, actor, document);
+      return { routedId: proofId, path: orderNo ? `/payments/${orderNo}` : "/payments" };
+    },
+    detach: detachProof,
+  },
   shipment: FILE_ONLY,
   filed: FILE_ONLY,
 };
@@ -168,7 +184,7 @@ export async function confirmDocumentType(deps: Deps, actor: Actor, documentId: 
   requireThat(spec, "Choose one of the known document types.");
 
   if (document.typeStatus === "confirmed" && document.confirmedType === type) {
-    return { kind: spec.routesTo, routedId: document.routedId };
+    return { kind: spec.routesTo, routedId: document.routedId, path: null };
   }
 
   // Changing an already confirmed type: first take the document back from wherever it was routed.
@@ -213,9 +229,9 @@ export async function confirmDocumentType(deps: Deps, actor: Actor, documentId: 
       : `${actor.name} confirmed ${document.fileName} as ${spec.label}.`,
   });
 
-  const routedId = await ROUTERS[spec.routesTo].attach(deps, actor, document);
-  await deps.db.document.update({ where: { id: document.id }, data: { routedKind: spec.routesTo, routedId } });
-  return { kind: spec.routesTo, routedId };
+  const routed = await ROUTERS[spec.routesTo].attach(deps, actor, document);
+  await deps.db.document.update({ where: { id: document.id }, data: { routedKind: spec.routesTo, routedId: routed.routedId } });
+  return { kind: spec.routesTo, routedId: routed.routedId, path: routed.path };
 }
 
 export async function listDocuments(deps: Pick<Deps, "db">, limit = 100): Promise<DocumentRow[]> {
@@ -223,11 +239,8 @@ export async function listDocuments(deps: Pick<Deps, "db">, limit = 100): Promis
 }
 
 /** Where to send the person after a document was routed. */
-export function pathForRoute(documentId: string, route: RouteResult): string {
-  if (route.kind === "order" && route.routedId) return `/orders/${route.routedId}/review`;
-  if (route.kind === "payment" && route.routedId) return `/payments`;
-  if (route.kind === "shipment" && route.routedId) return `/shipments/${route.routedId}`;
-  return `/documents/${documentId}`;
+export function pathForRoute(documentId: string, route: RouteResult | null): string {
+  return route?.path ?? `/documents/${documentId}`;
 }
 
 export function parseDocumentType(value: string): DocumentType {

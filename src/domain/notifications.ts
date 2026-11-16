@@ -192,7 +192,17 @@ export function buildCustomerPaymentReminder(
 
 export function buildVendorPaymentDue(
   finance: Recipient,
-  data: { poNumber: string; vendorName: string; currency: string; amount: string; dueDate: string; daysBefore: number },
+  data: {
+    poNumber: string;
+    vendorName: string;
+    currency: string;
+    amount: string;
+    dueDate: string;
+    /** Days from today to the due date (0 = today). Used in the wording. */
+    daysUntilDue: number;
+    /** Which reminder this is (3 = the "three days before" one). The same reminder is never written twice. */
+    reminderDaysBefore: number;
+  },
 ): OutgoingMessage {
   return {
     type: "vendor_payment_due",
@@ -201,10 +211,10 @@ export function buildVendorPaymentDue(
     subject: `Vendor payment due ${formatDate(data.dueDate)}: ${data.vendorName} ${data.currency} ${displayMoney(data.amount)}`,
     body:
       `Payment of ${data.currency} ${displayMoney(data.amount)} to ${data.vendorName} for ${data.poNumber} is due on ${formatDate(data.dueDate)} ` +
-      `(${data.daysBefore === 0 ? "today" : `in ${data.daysBefore} day${data.daysBefore === 1 ? "" : "s"}`}).`,
+      `(${data.daysUntilDue === 0 ? "today" : `in ${data.daysUntilDue} day${data.daysUntilDue === 1 ? "" : "s"}`}).`,
     entityType: "payment",
     entityId: data.poNumber,
-    dedupeKey: `vendor-payment:${data.poNumber}:${data.daysBefore}d`,
+    dedupeKey: `vendor-payment:${data.poNumber}:${data.reminderDaysBefore}d`,
   };
 }
 

@@ -8,6 +8,7 @@ import { FileNavisionGateway } from "../src/adapters/navision/fileGateway";
 import { isDocumentType } from "../src/domain/documents";
 import { extractedValues, type FieldValues } from "../src/domain/fields";
 import type { Flag, Severity } from "../src/domain/flags";
+import { matchProof, toProofData } from "../src/domain/payment/matching";
 import { checkCustomerPo } from "../src/domain/po/checks";
 import { aliasKey, sameCompany } from "../src/domain/po/partMatch";
 import { toCustomerPo } from "../src/domain/po/types";
@@ -76,7 +77,12 @@ async function validateCase(
     });
   }
 
-  // Payment matching arrives with story 4 and shipment checks with story 5.
+  if (goldenCase.kind === "proof_of_payment") {
+    // The open PIs and the earlier proofs come from context.json; the rules are the ones the payments page uses.
+    return matchProof(toProofData(documents[0].values), context.openInvoices, context.priorProofs).flags;
+  }
+
+  // Shipment checks arrive with story 5.
   return null;
 }
 

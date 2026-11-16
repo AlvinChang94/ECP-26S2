@@ -54,4 +54,4 @@ Flags are data: `{ code, severity, field, reason, canOverride, suggestion? }`. M
 
 ## Progress
 
-- [x] M0  - [x] M1  - [x] M2  - [x] M3  - [ ] M4  - [ ] M5  - [ ] M6  - [ ] M7
+- [x] M0  - [x] M1  - [x] M2  - [x] M3  - [x] M4  - [ ] M5  - [ ] M6  - [ ] M7

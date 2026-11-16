@@ -35,12 +35,8 @@ export async function POST(request: Request): Promise<Response> {
       chosenType,
     });
     const notice = result.sameFileAs ? `?notice=${encodeURIComponent("Note: exactly the same file was received before.")}` : "";
-    if (chosenType) {
-      // The person chose the type while uploading, so the document is already confirmed and routed.
-      const document = await deps.db.document.findUnique({ where: { id: result.documentId } });
-      const kind = (document?.routedKind ?? "filed") as "order" | "payment" | "shipment" | "filed";
-      return seeOther(request, pathForRoute(result.documentId, { kind, routedId: document?.routedId ?? null }));
-    }
+    // When the person chose the type while uploading, the document is already confirmed and routed: go straight there.
+    if (result.route) return seeOther(request, pathForRoute(result.documentId, result.route));
     return seeOther(request, `/documents/${result.documentId}${notice}`);
   } catch (error) {
     if (error instanceof UserError) return seeOther(request, `/inbox?error=${encodeURIComponent(error.message)}`);

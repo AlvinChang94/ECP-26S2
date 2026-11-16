@@ -42,7 +42,7 @@ describe("taking in a PDF", () => {
   it("creates the order only when the type is confirmed, and records who confirmed it", async () => {
     const { documentId } = await upload("po-clean-a.pdf");
     const route = await confirmDocumentType(workspace.deps, SAM, documentId, "customer_po");
-    expect(route).toEqual({ kind: "order", routedId: "ORD-1001" });
+    expect(route).toEqual({ kind: "order", routedId: "ORD-1001", path: "/orders/ORD-1001/review" });
     const { document } = await loadDocument(workspace.deps, documentId);
     expect(document).toMatchObject({ typeStatus: "confirmed", confirmedType: "customer_po", confirmedBy: "Sam Tan", routedId: "ORD-1001" });
     const timeline = await listEntityTimeline(workspace.deps, "document", documentId);

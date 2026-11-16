@@ -5,6 +5,7 @@ import { type Clock, OffsetClock } from "@/adapters/clock";
 import { type AppConfig, loadConfig } from "@/adapters/config";
 import { createDb, type Db } from "@/adapters/db";
 import { createExtractor } from "@/adapters/extractor";
+import { createAnthropicReader, type LlmReader } from "@/adapters/extractor/llm";
 import type { DocumentExtractor } from "@/adapters/extractor/types";
 import { type FileStore, LocalFileStore } from "@/adapters/fileStore";
 import { FolderInboxSource, type InboxSource } from "@/adapters/inbox";
@@ -22,6 +23,8 @@ export type Deps = {
   files: FileStore;
   /** Where forwarded PDFs wait (simulated email and WhatsApp). */
   inbox: InboxSource;
+  /** Only set when EXTRACTOR=llm. Used to reword a reminder draft; never to decide anything. */
+  llm: LlmReader | null;
   config: AppConfig;
 };
 
@@ -39,6 +42,7 @@ export function buildDeps(config: AppConfig, clock: Clock, overrides: Partial<De
     extractor: createExtractor(config),
     files: new LocalFileStore(config.storageDir),
     inbox: new FolderInboxSource(config.inboxDir),
+    llm: config.extractor === "llm" ? createAnthropicReader(config) : null,
     notifier: new OutboxNotifier(db, clock),
     ...overrides,
   };
@@ -60,6 +64,7 @@ function longLived(): LongLived {
       extractor: createExtractor(config),
       files: new LocalFileStore(config.storageDir),
       inbox: new FolderInboxSource(config.inboxDir),
+      llm: config.extractor === "llm" ? createAnthropicReader(config) : null,
     };
   }
   return globalStore.orderflowLongLived;

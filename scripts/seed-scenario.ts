@@ -10,14 +10,16 @@ import type { Deps } from "../src/services/deps";
 import { recordDelivery } from "../src/services/fulfilment";
 import { confirmDocumentType, ingestDocument } from "../src/services/intake";
 import { runDueJobs } from "../src/services/jobs";
+import { confirmPaid } from "../src/services/payments";
 import { editField } from "../src/services/poEdit";
 import { approveAndExport, approveCancellation, buildCancellationPreview, buildExportPreview } from "../src/services/poExport";
 import { createSpr, decideSpr, latestApprovalTokenFromOutbox, submitSpr } from "../src/services/spr";
 import { customerByName, DEMO_NOW } from "./sample-data/master";
-import { SCENARIO_ORDERS, scenarioOrder } from "./sample-data/scenario";
+import { SCENARIO_ORDERS, SCENARIO_PROOFS, scenarioOrder } from "./sample-data/scenario";
 
 const SAM: Actor = { name: "Sam Tan", role: "sales" };
 const PRIYA: Actor = { name: "Priya Nair", role: "product_manager" };
+const FARAH: Actor = { name: "Farah Lim", role: "finance" };
 
 /** One thing that happened in the demo's past, at a simulated time. */
 type Step = { at: Date; label: string; run: () => Promise<void> };
@@ -28,6 +30,8 @@ function before(hours: number, minutesLater = 0): Date {
 
 /** Orders that are left as drafts with open findings, so the dashboard shows a PO still in review. */
 const LEFT_IN_REVIEW = new Set(["ORD-1039"]);
+/** Orders whose proof of payment has arrived but which Finance has not confirmed yet ("Proof received" on the board). */
+const PROOF_NOT_YET_CONFIRMED = new Set(["ORD-1034", "ORD-1035"]);
 
 function buildSteps(deps: Deps, seedDir: string): Step[] {
   const steps: Step[] = [];
@@ -111,6 +115,30 @@ function buildSteps(deps: Deps, seedDir: string): Step[] {
     },
   });
 
+  // ---- Story 4: proofs of payment arrive; Farah confirms the type, checks the match and confirms the payment.
+  for (const proof of SCENARIO_PROOFS) {
+    const order = scenarioOrder(proof.orderNo);
+    steps.push({
+      at: before(proof.paidHoursAgo),
+      label: `${proof.orderNo}: proof of payment arrives and Farah confirms its type`,
+      run: async () => {
+        const result = await ingestDocument(deps, FARAH, {
+          bytes: read(proof.file),
+          fileName: proof.file,
+          channel: proof.layout === "A" ? "whatsapp" : "email",
+          sender: customerByName(order.customer).email,
+        });
+        await confirmDocumentType(deps, FARAH, result.documentId, "proof_of_payment");
+      },
+    });
+    if (PROOF_NOT_YET_CONFIRMED.has(proof.orderNo)) continue;
+    steps.push({
+      at: before(proof.paidHoursAgo, 45),
+      label: `${proof.orderNo}: Farah confirms the payment; the warehouse is notified`,
+      run: () => confirmPaid(deps, FARAH, { orderNo: proof.orderNo, reason: "" }),
+    });
+  }
+
   // ---- Story 3: SPRs. The approver is played by opening the link from the Outbox, as she would from her email.
   const decide = async (sprNo: string, decision: "approve" | "reject", remarks: string): Promise<void> => {
     const token = await latestApprovalTokenFromOutbox(deps, sprNo);
@@ -142,6 +170,9 @@ function buildSteps(deps: Deps, seedDir: string): Step[] {
 
   // SPR-0005: a draft that was never submitted.
   steps.push({ at: before(2), label: "SPR-0005: Priya saves a draft for NAS-2B", run: () => raise("SPR-0005", "NAS-2B", 6, "Open orders need 18 NAS enclosures and 12 are in stock.", null, false) });
+
+  // ---- The regular job run shortly before the demo starts: vendor payment reminders, drafts for late payers, due-date alerts.
+  steps.push({ at: before(0, -5), label: "Due jobs run before the demo starts", run: async () => void (await runDueJobs(deps)) });
 
   return steps;
 }

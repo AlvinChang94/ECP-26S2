@@ -7,6 +7,7 @@ import { createDb, type Db } from "@/adapters/db";
 import { createExtractor } from "@/adapters/extractor";
 import type { DocumentExtractor } from "@/adapters/extractor/types";
 import { type FileStore, LocalFileStore } from "@/adapters/fileStore";
+import { FolderInboxSource, type InboxSource } from "@/adapters/inbox";
 import { FileNavisionGateway } from "@/adapters/navision/fileGateway";
 import type { NavisionGateway } from "@/adapters/navision/gateway";
 import { type Notifier, OutboxNotifier } from "@/adapters/notifier";
@@ -19,6 +20,8 @@ export type Deps = {
   notifier: Notifier;
   clock: Clock;
   files: FileStore;
+  /** Where forwarded PDFs wait (simulated email and WhatsApp). */
+  inbox: InboxSource;
   config: AppConfig;
 };
 
@@ -35,6 +38,7 @@ export function buildDeps(config: AppConfig, clock: Clock, overrides: Partial<De
     navision: new FileNavisionGateway(config.navisionDir),
     extractor: createExtractor(config),
     files: new LocalFileStore(config.storageDir),
+    inbox: new FolderInboxSource(config.inboxDir),
     notifier: new OutboxNotifier(db, clock),
     ...overrides,
   };
@@ -55,6 +59,7 @@ function longLived(): LongLived {
       navision: new FileNavisionGateway(config.navisionDir),
       extractor: createExtractor(config),
       files: new LocalFileStore(config.storageDir),
+      inbox: new FolderInboxSource(config.inboxDir),
     };
   }
   return globalStore.orderflowLongLived;

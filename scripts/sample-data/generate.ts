@@ -15,7 +15,7 @@ import {
 import type { NavGoodsReceipt, NavOpenOrder, NavPurchaseOrder } from "../../src/domain/navision";
 import { buildGoldenDataset } from "./golden";
 import { GoldenCasesFileSchema, GoldenContextSchema } from "./goldenTypes";
-import { CUSTOMERS, ITEMS, STAFF, SYNTHETIC_NOTE, VENDORS } from "./master";
+import { CUSTOMERS, DEMO_NOW, ITEMS, STAFF, SYNTHETIC_NOTE, VENDORS } from "./master";
 import { buildReplayDataset, REPLAY_SEED } from "./replay";
 import { ReplayFileSchema } from "./replayTypes";
 import {
@@ -101,7 +101,16 @@ export async function generateSampleData(dataDir: string): Promise<GenerationSum
   const inbox = await buildInboxFiles();
   const inboxDir = path.join(dataDir, "inbox");
   for (const file of inbox.files) await writeBytes(path.join(inboxDir, file.path), file.bytes);
-  await writeJson(path.join(inboxDir, "manifest.json"), { _note: SYNTHETIC_NOTE, messages: inbox.manifest });
+  await writeJson(path.join(inboxDir, "manifest.json"), {
+    _note: SYNTHETIC_NOTE,
+    messages: inbox.manifest.map((entry) => ({
+      file: entry.file,
+      channel: entry.channel,
+      sender: entry.sender,
+      receivedAt: new Date(DEMO_NOW.getTime() - entry.receivedMinutesAgo * 60 * 1000).toISOString(),
+      purpose: entry.purpose,
+    })),
+  });
   files += inbox.files.length + 1;
 
   // 5. Six-month history for the KPI replay, again with its own Navision folder.

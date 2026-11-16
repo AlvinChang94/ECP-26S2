@@ -9,6 +9,24 @@ import { PrismaClient } from "@/generated/prisma/client";
 
 export type Db = PrismaClient;
 
+// Row types of the tables, re-exported so the rest of the code never imports the generated client directly.
+export type {
+  ApprovalToken as ApprovalTokenRow,
+  AuditEvent as AuditEventRow,
+  Delivery as DeliveryRow,
+  Document as DocumentRow,
+  FlagDecision as FlagDecisionRow,
+  Order as OrderRow,
+  OutboxMessage as OutboxMessageRow,
+  PartAlias as PartAliasRow,
+  PaymentProof as PaymentProofRow,
+  PoVersion as PoVersionRow,
+  ScheduledJob as ScheduledJobRow,
+  Shipment as ShipmentRow,
+  ShipmentDocument as ShipmentDocumentRow,
+  Spr as SprRow,
+} from "@/generated/prisma/client";
+
 /** `databaseUrl` looks like "file:C:/path/to/orderflow.db" (config.ts makes the path absolute). */
 export function createDb(databaseUrl: string): Db {
   const adapter = new PrismaBetterSqlite3({ url: databaseUrl });

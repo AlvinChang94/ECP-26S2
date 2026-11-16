@@ -74,9 +74,18 @@ export async function listEntityTimeline(deps: Pick<Deps, "db">, entityType: str
   return rows.map(toTimelineEntry);
 }
 
-/** Everything that happened to one order across documents, payments, SPRs and shipments, oldest first. */
+/**
+ * Everything that happened to one order across documents, payments, SPRs and shipments, oldest first.
+ * Events recorded with the order number are included, and so are the events of the order's PO documents
+ * (a document is received and confirmed before it belongs to an order).
+ */
 export async function listOrderTimeline(deps: Pick<Deps, "db">, orderNo: string): Promise<TimelineEntry[]> {
-  const rows = await deps.db.auditEvent.findMany({ where: { orderNo }, orderBy: { id: "asc" } });
+  const versions = await deps.db.poVersion.findMany({ where: { orderNo }, select: { documentId: true } });
+  const documentIds = versions.map((version) => version.documentId);
+  const rows = await deps.db.auditEvent.findMany({
+    where: { OR: [{ orderNo }, { entityType: "document", entityId: { in: documentIds } }] },
+    orderBy: { id: "asc" },
+  });
   return rows.map(toTimelineEntry);
 }
 

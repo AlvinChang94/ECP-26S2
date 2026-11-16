@@ -5,70 +5,70 @@
       "file": "po-colombo-pc-house-cp-1140.pdf",
       "channel": "email",
       "sender": "orders@colombopc.example",
-      "receivedMinutesAgo": 35,
+      "receivedAt": "2026-11-16T00:25:00.000Z",
       "purpose": "Story 1 and 2 happy path: a clean PO."
     },
     {
       "file": "po-lanka-tech-lt-po-2310.pdf",
       "channel": "whatsapp",
       "sender": "Lanka Tech purchasing (sample)",
-      "receivedMinutesAgo": 28,
+      "receivedAt": "2026-11-16T00:32:00.000Z",
       "purpose": "Story 1 and 2: AB-1234X alias and a special-deal price to override."
     },
     {
       "file": "po-dhaka-it-dh-5120.pdf",
       "channel": "email",
       "sender": "buy@dhakait.example",
-      "receivedMinutesAgo": 20,
+      "receivedAt": "2026-11-16T00:40:00.000Z",
       "purpose": "Story 2 and 3: AB-1234X again (remembered alias) and 200 ordered with 160 in stock (suggests an SPR)."
     },
     {
       "file": "po-kathmandu-digital-hub-kdh-0012.pdf",
       "channel": "email",
       "sender": "hello@kathmandudigital.example",
-      "receivedMinutesAgo": 16,
+      "receivedAt": "2026-11-16T00:44:00.000Z",
       "purpose": "Story 1 and 2: unknown customer, needs a new customer card."
     },
     {
       "file": "payment-dhaka-it-pi-1033.pdf",
       "channel": "whatsapp",
       "sender": "Dhaka IT accounts (sample)",
-      "receivedMinutesAgo": 12,
+      "receivedAt": "2026-11-16T00:48:00.000Z",
       "purpose": "Story 4 happy path: proof that matches PI-1033 exactly."
     },
     {
       "file": "payment-alpine-own-reference.pdf",
       "channel": "email",
       "sender": "purchase@alpinemfg.example",
-      "receivedMinutesAgo": 10,
+      "receivedAt": "2026-11-16T00:50:00.000Z",
       "purpose": "Story 4 failure path: the reference matches no PI; Finance links it by hand with a reason."
     },
     {
       "file": "awb-pacific-components-po-8341.pdf",
       "channel": "email",
       "sender": "export@pacificcomponents.example",
-      "receivedMinutesAgo": 8,
+      "receivedAt": "2026-11-16T00:52:00.000Z",
       "purpose": "Story 5 and 6: the missing AWB for PO-8341 (ORD-1042)."
     },
     {
       "file": "po-dubai-dist-dd-7802-amendment-1.pdf",
       "channel": "email",
       "sender": "purchasing@dubaidist.example",
-      "receivedMinutesAgo": 6,
+      "receivedAt": "2026-11-16T00:54:00.000Z",
       "purpose": "Story 2: amended PO for ORD-1032 (quantity change and one new line)."
     },
     {
       "file": "po-muscat-micro-mm-3342-cancellation.pdf",
       "channel": "email",
       "sender": "trade@muscatmicro.example",
-      "receivedMinutesAgo": 4,
+      "receivedAt": "2026-11-16T00:56:00.000Z",
       "purpose": "Story 2: cancellation of ORD-1039, which is still a draft."
     },
     {
       "file": "notice-office-closure.pdf",
       "channel": "whatsapp",
       "sender": "Unknown sender (sample)",
-      "receivedMinutesAgo": 2,
+      "receivedAt": "2026-11-16T00:58:00.000Z",
       "purpose": "Story 1 failure path: not a known document type, a person must choose."
     }
   ]

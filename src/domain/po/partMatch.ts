@@ -73,3 +73,8 @@ export function sameCompany(a: string, b: string): boolean {
   const left = normalizeCompanyName(a);
   return left.length > 0 && left === normalizeCompanyName(b);
 }
+
+/** The key under which an alias is remembered: the part number as written, trimmed and in upper case. */
+export function aliasKey(partNo: string): string {
+  return partNo.trim().toUpperCase();
+}

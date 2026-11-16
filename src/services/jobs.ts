@@ -1,9 +1,10 @@
 // What: runDueJobs(now): does everything that is due at a given time (reminders, escalations, due-date alerts).
 // Who calls it: the "Run due jobs" button, the demo clock buttons, the seed and the KPI replay. Nothing runs in the background.
 // To extend: add a handler for a new ScheduledJob type to JOB_HANDLERS, or a new sweep to SWEEPS. In AWS, EventBridge Scheduler calls this.
-import type { Deps } from "./deps";
-import { recordAudit } from "./audit";
 import { SYSTEM_ACTOR } from "@/domain/audit";
+import { recordAudit } from "./audit";
+import type { Deps } from "./deps";
+import { sprEscalationJob, sprReminderJob } from "./spr";
 
 export type DueJob = { id: string; type: string; entityType: string; entityId: string; payloadJson: string; dueAt: Date };
 
@@ -13,8 +14,11 @@ export type JobHandler = (deps: Deps, job: DueJob, now: Date) => Promise<string>
 /** Looks for things that have become due (for example a document due date) and returns one line per action taken. */
 export type Sweep = (deps: Deps, now: Date) => Promise<string[]>;
 
-/** One handler per ScheduledJob.type. Filled in by the stories that schedule jobs. */
-const JOB_HANDLERS: Record<string, JobHandler> = {};
+/** One handler per ScheduledJob.type. Story 3 schedules the SPR reminders at 24, 48 and 72 hours. */
+const JOB_HANDLERS: Record<string, JobHandler> = {
+  spr_reminder: sprReminderJob,
+  spr_escalation: sprEscalationJob,
+};
 
 /** Checks that run on every call. Each must be safe to repeat: the Outbox dedupe key stops double sending. */
 const SWEEPS: Sweep[] = [];

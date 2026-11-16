@@ -9,12 +9,15 @@ import { setLastUsedNumber } from "../src/services/counters";
 import type { Deps } from "../src/services/deps";
 import { recordDelivery } from "../src/services/fulfilment";
 import { confirmDocumentType, ingestDocument } from "../src/services/intake";
+import { runDueJobs } from "../src/services/jobs";
 import { editField } from "../src/services/poEdit";
 import { approveAndExport, approveCancellation, buildCancellationPreview, buildExportPreview } from "../src/services/poExport";
+import { createSpr, decideSpr, latestApprovalTokenFromOutbox, submitSpr } from "../src/services/spr";
 import { customerByName, DEMO_NOW } from "./sample-data/master";
 import { SCENARIO_ORDERS, scenarioOrder } from "./sample-data/scenario";
 
 const SAM: Actor = { name: "Sam Tan", role: "sales" };
+const PRIYA: Actor = { name: "Priya Nair", role: "product_manager" };
 
 /** One thing that happened in the demo's past, at a simulated time. */
 type Step = { at: Date; label: string; run: () => Promise<void> };
@@ -107,6 +110,38 @@ function buildSteps(deps: Deps, seedDir: string): Step[] {
       await recordDelivery(deps, SAM, { orderNo: "ORD-1037", partNo: "FD-64U3", quantity: 300, note: null });
     },
   });
+
+  // ---- Story 3: SPRs. The approver is played by opening the link from the Outbox, as she would from her email.
+  const decide = async (sprNo: string, decision: "approve" | "reject", remarks: string): Promise<void> => {
+    const token = await latestApprovalTokenFromOutbox(deps, sprNo);
+    if (!token) throw new Error(`No approval link found in the Outbox for ${sprNo}`);
+    await decideSpr(deps, token, { decision, remarks });
+  };
+  const raise = async (expected: string, partNo: string, quantity: number, reason: string, sourceOrderNo: string | null, submit = true): Promise<void> => {
+    const sprNo = await createSpr(deps, PRIYA, { partNo, quantity, reason, sourceOrderNo });
+    if (sprNo !== expected) throw new Error(`Seed expected ${expected} but the SPR became ${sprNo}`);
+    if (submit) await submitSpr(deps, PRIYA, sprNo);
+  };
+
+  // SPR-0001 for ORD-1042: decided after the 24-hour reminder went out.
+  steps.push({ at: before(12 * 24 - 2), label: "SPR-0001: Priya raises 100 x PC-4402 for ORD-1042", run: () => raise("SPR-0001", "PC-4402", 100, "ORD-1042 (Beacon Devices) needs 100 and none are in stock.", "ORD-1042") });
+  steps.push({ at: before(12 * 24 - 2 - 24, 5), label: "Due jobs run: 24-hour reminder for SPR-0001", run: async () => void (await runDueJobs(deps)) });
+  steps.push({ at: before(12 * 24 - 2 - 25), label: "SPR-0001: Janet approves", run: () => decide("SPR-0001", "approve", "Approved. Customer has paid in advance.") });
+
+  // SPR-0002 for ORD-1037: decided within hours, before any reminder.
+  steps.push({ at: before(8 * 24 - 3), label: "SPR-0002: Priya raises 25 x RAM-16D4 for ORD-1037", run: () => raise("SPR-0002", "RAM-16D4", 25, "ORD-1037 (Nova Controls) is 25 short of stock.", "ORD-1037") });
+  steps.push({ at: before(8 * 24 - 9), label: "SPR-0002: Janet approves", run: () => decide("SPR-0002", "approve", "Approved.") });
+
+  // SPR-0003: a restocking request that was rejected.
+  steps.push({ at: before(6 * 24), label: "SPR-0003: Priya raises a restocking request", run: () => raise("SPR-0003", "TC-LBL4", 50, "Restock label printers before the year-end orders.", null) });
+  steps.push({ at: before(6 * 24 - 20), label: "SPR-0003: Janet rejects", run: () => decide("SPR-0003", "reject", "25 are in stock and no open order needs them. Raise it again when an order comes in.") });
+
+  // SPR-0004 for ORD-1040: still waiting for Janet. Submitted 30 hours ago, so the 24-hour reminder has gone out.
+  steps.push({ at: before(30), label: "SPR-0004: Priya raises 15 x EF-9 for ORD-1040", run: () => raise("SPR-0004", "EF-9", 15, "ORD-1040 (Lanka Tech) needs 60 monitors and 45 are in stock.", "ORD-1040") });
+  steps.push({ at: before(6, 5), label: "Due jobs run: 24-hour reminder for SPR-0004", run: async () => void (await runDueJobs(deps)) });
+
+  // SPR-0005: a draft that was never submitted.
+  steps.push({ at: before(2), label: "SPR-0005: Priya saves a draft for NAS-2B", run: () => raise("SPR-0005", "NAS-2B", 6, "Open orders need 18 NAS enclosures and 12 are in stock.", null, false) });
 
   return steps;
 }

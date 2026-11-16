@@ -43,7 +43,8 @@ function aliasSpelling(itemNo: string): string {
 }
 
 const UNLISTED_PARTS = ["ZX-9907", "QQ-00417", "VV-3105", "JK-88021"];
-const LOW_STOCK_ITEMS = ["EF-9", "UPS-650", "NAS-2B", "PRJ-X20", "TC-LBL4"];
+/** Parts with little or no stock: kept out of ordinary lines, and used for the seeded "quantity above stock" cases. */
+const LOW_STOCK_ITEMS = ["EF-9", "UPS-650", "NAS-2B", "PRJ-X20", "TC-LBL4", "RAM-16D4"];
 
 function safeQuantity(rng: Rng, item: NavItem): number {
   // Stay well below the stock on hand so that only the seeded cases exceed it.

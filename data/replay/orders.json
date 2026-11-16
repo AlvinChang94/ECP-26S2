@@ -29,50 +29,104 @@
       "poFile": "files/rpl-002-po.pdf",
       "poNumber": "R2601-DDL",
       "customerName": "Dubai Dist LLC",
-      "channel": "email",
+      "channel": "whatsapp",
       "arrivedAt": "2026-05-21T07:02:00.000Z",
       "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-05-21T20:02:00.000Z",
+        "navisionCreatedAt": "2026-05-21T18:02:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-05",
-        "actualShipDate": "2026-06-12"
+        "promisedShipDate": "2026-06-03",
+        "actualShipDate": "2026-06-03"
       }
     },
     {
       "id": "RPL-003",
       "poFile": "files/rpl-003-po.pdf",
-      "poNumber": "R2602-BD",
-      "customerName": "Beacon Devices",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-05-25T07:05:00.000Z",
+      "poNumber": "R2602-CPC",
+      "customerName": "Colombo PC House",
+      "channel": "email",
+      "arrivedAt": "2026-05-25T01:26:00.000Z",
       "lineCount": 2,
-      "seededErrors": [],
+      "seededErrors": [
+        {
+          "code": "PART_ALIAS_SUGGESTED",
+          "field": "lines[0].partNo",
+          "detail": "PSU550B written for PSU-550B",
+          "resolution": {
+            "action": "use_suggestion"
+          }
+        }
+      ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-05-25T20:05:00.000Z",
+        "navisionCreatedAt": "2026-05-26T16:26:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-08",
-        "actualShipDate": "2026-06-08"
+        "promisedShipDate": "2026-06-04",
+        "actualShipDate": "2026-06-12"
       }
     },
     {
       "id": "RPL-004",
       "poFile": "files/rpl-004-po.pdf",
-      "poNumber": "R2603-CPC",
-      "customerName": "Colombo PC House",
+      "poNumber": "R2603-DDL",
+      "customerName": "Dubai Dist LLC",
+      "channel": "email",
+      "arrivedAt": "2026-05-25T04:40:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-05-25T12:40:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-06-04",
+        "actualShipDate": "2026-06-04"
+      }
+    },
+    {
+      "id": "RPL-005",
+      "poFile": "files/rpl-005-po.pdf",
+      "poNumber": "R2604-LTP",
+      "customerName": "Lanka Tech Pte Ltd",
       "channel": "whatsapp",
-      "arrivedAt": "2026-05-25T01:50:00.000Z",
+      "arrivedAt": "2026-05-28T03:39:00.000Z",
       "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "PART_ALIAS_SUGGESTED",
+          "field": "lines[0].partNo",
+          "detail": "FD64U3 written for FD-64U3",
+          "resolution": {
+            "action": "use_suggestion"
+          }
+        }
+      ],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-05-29T06:39:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-06-10",
+        "actualShipDate": "2026-06-12"
+      }
+    },
+    {
+      "id": "RPL-006",
+      "poFile": "files/rpl-006-po.pdf",
+      "poNumber": "R2605-MMT",
+      "customerName": "Muscat Micro Trading",
+      "channel": "email",
+      "arrivedAt": "2026-06-01T06:00:00.000Z",
+      "lineCount": 3,
       "seededErrors": [
         {
           "code": "PRICE_MISMATCH",
           "field": "lines[0].unitPrice",
-          "detail": "83.66 on the PO, 89.00 in Navision (6% lower)",
+          "detail": "66.93 on the PO, 71.20 in Navision (6% lower)",
           "resolution": {
             "action": "override",
             "reason": "Special deal agreed with the customer (simulated staff decision)."
@@ -81,167 +135,74 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-05-26T06:50:00.000Z",
+        "navisionCreatedAt": "2026-06-03T02:00:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-06",
-        "actualShipDate": "2026-06-05"
-      }
-    },
-    {
-      "id": "RPL-005",
-      "poFile": "files/rpl-005-po.pdf",
-      "poNumber": "R2604-CPC",
-      "customerName": "Colombo PC House",
-      "channel": "email",
-      "arrivedAt": "2026-05-29T06:24:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "QTY_EXCEEDS_STOCK",
-          "field": "lines[0].quantity",
-          "detail": "59 ordered, 38 in stock",
-          "resolution": {
-            "action": "none"
-          }
-        }
-      ],
-      "spr": {
-        "partNo": "UPS-650",
-        "quantity": 21
-      },
-      "baseline": {
-        "navisionCreatedAt": "2026-05-30T23:24:00.000Z",
-        "sprSubmittedAt": "2026-05-29T20:24:00.000Z",
-        "sprDecidedAt": "2026-05-31T00:24:00.000Z",
-        "promisedShipDate": "2026-06-16",
-        "actualShipDate": "2026-06-15"
-      }
-    },
-    {
-      "id": "RPL-006",
-      "poFile": "files/rpl-006-po.pdf",
-      "poNumber": "R2605-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
-      "channel": "email",
-      "arrivedAt": "2026-06-01T04:16:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-06-02T00:16:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-15",
-        "actualShipDate": "2026-06-14"
+        "promisedShipDate": "2026-06-18",
+        "actualShipDate": "2026-06-16"
       }
     },
     {
       "id": "RPL-007",
       "poFile": "files/rpl-007-po.pdf",
-      "poNumber": "R2606-NC",
-      "customerName": "Nova Controls",
+      "poNumber": "R2606-CPC",
+      "customerName": "Colombo PC House",
       "channel": "email",
-      "arrivedAt": "2026-06-03T01:49:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "PART_ALIAS_SUGGESTED",
-          "field": "lines[0].partNo",
-          "detail": "AB-1234X written for AB1234X",
-          "resolution": {
-            "action": "use_suggestion"
-          }
-        }
-      ],
+      "arrivedAt": "2026-06-03T05:09:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-04T22:49:00.000Z",
+        "navisionCreatedAt": "2026-06-03T22:09:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-20",
-        "actualShipDate": "2026-06-20"
+        "promisedShipDate": "2026-06-19",
+        "actualShipDate": "2026-06-25"
       }
     },
     {
       "id": "RPL-008",
       "poFile": "files/rpl-008-po.pdf",
-      "poNumber": "R2607-KDH",
-      "customerName": "Kathmandu Digital Hub",
+      "poNumber": "R2607-DIT",
+      "customerName": "Dhaka IT Solutions",
       "channel": "email",
-      "arrivedAt": "2026-06-08T06:39:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [
-        {
-          "code": "CUSTOMER_NOT_FOUND",
-          "field": "customerName",
-          "detail": "Kathmandu Digital Hub is not in Navision",
-          "resolution": {
-            "action": "propose_customer_card"
-          }
-        }
-      ],
+      "arrivedAt": "2026-06-05T03:25:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-09T14:39:00.000Z",
+        "navisionCreatedAt": "2026-06-05T21:25:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-21",
-        "actualShipDate": "2026-06-24"
+        "promisedShipDate": "2026-06-22",
+        "actualShipDate": "2026-06-22"
       }
     },
     {
       "id": "RPL-009",
       "poFile": "files/rpl-009-po.pdf",
-      "poNumber": "R2608-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
+      "poNumber": "R2608-MP",
+      "customerName": "Meridian Parts",
       "channel": "email",
-      "arrivedAt": "2026-06-08T08:03:00.000Z",
-      "lineCount": 1,
+      "arrivedAt": "2026-06-08T03:14:00.000Z",
+      "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-08T16:03:00.000Z",
+        "navisionCreatedAt": "2026-06-08T15:14:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-28",
-        "actualShipDate": "2026-06-26"
+        "promisedShipDate": "2026-06-19",
+        "actualShipDate": "2026-06-19"
       }
     },
     {
       "id": "RPL-010",
       "poFile": "files/rpl-010-po.pdf",
-      "poNumber": "R2609-DIT",
-      "customerName": "Dhaka IT Solutions",
-      "channel": "email",
-      "arrivedAt": "2026-06-10T08:13:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [
-        {
-          "code": "PART_ALIAS_SUGGESTED",
-          "field": "lines[1].partNo",
-          "detail": "LP15S written for LP-15S",
-          "resolution": {
-            "action": "use_suggestion"
-          }
-        }
-      ],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-06-11T23:13:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-26",
-        "actualShipDate": "2026-07-01"
-      }
-    },
-    {
-      "id": "RPL-011",
-      "poFile": "files/rpl-011-po.pdf",
-      "poNumber": "R2610-AM",
-      "customerName": "Alpine Manufacturing",
+      "poNumber": "R2609-LTP",
+      "customerName": "Lanka Tech Pte Ltd",
       "channel": "whatsapp",
-      "arrivedAt": "2026-06-15T05:06:00.000Z",
+      "arrivedAt": "2026-06-11T01:37:00.000Z",
       "lineCount": 1,
       "seededErrors": [
         {
@@ -256,26 +217,26 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-16T16:06:00.000Z",
+        "navisionCreatedAt": "2026-06-12T12:37:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-02",
-        "actualShipDate": "2026-07-08"
+        "promisedShipDate": "2026-06-28",
+        "actualShipDate": "2026-07-04"
       }
     },
     {
-      "id": "RPL-012",
-      "poFile": "files/rpl-012-po.pdf",
-      "poNumber": "R2611-MIT",
-      "customerName": "Male Island Tech",
+      "id": "RPL-011",
+      "poFile": "files/rpl-011-po.pdf",
+      "poNumber": "R2610-KDH",
+      "customerName": "Kathmandu Digital Hub",
       "channel": "email",
-      "arrivedAt": "2026-06-16T01:20:00.000Z",
+      "arrivedAt": "2026-06-15T01:20:00.000Z",
       "lineCount": 2,
       "seededErrors": [
         {
           "code": "CUSTOMER_NOT_FOUND",
           "field": "customerName",
-          "detail": "Male Island Tech is not in Navision",
+          "detail": "Kathmandu Digital Hub is not in Navision",
           "resolution": {
             "action": "propose_customer_card"
           }
@@ -283,89 +244,89 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-17T17:20:00.000Z",
+        "navisionCreatedAt": "2026-06-16T17:20:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-06-30",
-        "actualShipDate": "2026-06-28"
+        "promisedShipDate": "2026-06-29",
+        "actualShipDate": "2026-06-27"
+      }
+    },
+    {
+      "id": "RPL-012",
+      "poFile": "files/rpl-012-po.pdf",
+      "poNumber": "R2611-BD",
+      "customerName": "Beacon Devices",
+      "channel": "email",
+      "arrivedAt": "2026-06-16T08:09:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-06-17T02:09:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-07-02",
+        "actualShipDate": "2026-07-08"
       }
     },
     {
       "id": "RPL-013",
       "poFile": "files/rpl-013-po.pdf",
-      "poNumber": "R2612-BD",
-      "customerName": "Beacon Devices",
+      "poNumber": "R2612-KC",
+      "customerName": "Karachi Compute",
       "channel": "email",
-      "arrivedAt": "2026-06-19T08:09:00.000Z",
-      "lineCount": 1,
+      "arrivedAt": "2026-06-18T07:08:00.000Z",
+      "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-20T02:09:00.000Z",
+        "navisionCreatedAt": "2026-06-18T22:08:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
         "promisedShipDate": "2026-07-05",
-        "actualShipDate": "2026-07-11"
+        "actualShipDate": "2026-07-03"
       }
     },
     {
       "id": "RPL-014",
       "poFile": "files/rpl-014-po.pdf",
-      "poNumber": "R2613-KC",
-      "customerName": "Karachi Compute",
-      "channel": "email",
-      "arrivedAt": "2026-06-22T07:08:00.000Z",
+      "poNumber": "R2613-LTP",
+      "customerName": "Lanka Tech Pte Ltd",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-06-22T02:06:00.000Z",
       "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-22T22:08:00.000Z",
+        "navisionCreatedAt": "2026-06-22T19:06:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-09",
-        "actualShipDate": "2026-07-07"
+        "promisedShipDate": "2026-07-10",
+        "actualShipDate": "2026-07-14"
       }
     },
     {
       "id": "RPL-015",
       "poFile": "files/rpl-015-po.pdf",
-      "poNumber": "R2614-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-06-23T02:06:00.000Z",
-      "lineCount": 3,
+      "poNumber": "R2614-NC",
+      "customerName": "Nova Controls",
+      "channel": "email",
+      "arrivedAt": "2026-06-24T05:14:00.000Z",
+      "lineCount": 2,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-06-23T19:06:00.000Z",
+        "navisionCreatedAt": "2026-06-24T23:14:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-11",
-        "actualShipDate": "2026-07-15"
+        "promisedShipDate": "2026-07-12",
+        "actualShipDate": "2026-07-20"
       }
     },
     {
       "id": "RPL-016",
       "poFile": "files/rpl-016-po.pdf",
       "poNumber": "R2615-NC",
-      "customerName": "Nova Controls",
-      "channel": "email",
-      "arrivedAt": "2026-06-29T05:14:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-06-29T23:14:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-17",
-        "actualShipDate": "2026-07-25"
-      }
-    },
-    {
-      "id": "RPL-017",
-      "poFile": "files/rpl-017-po.pdf",
-      "poNumber": "R2616-NC",
       "customerName": "Nova Controls",
       "channel": "whatsapp",
       "arrivedAt": "2026-06-29T07:29:00.000Z",
@@ -393,12 +354,12 @@
       }
     },
     {
-      "id": "RPL-018",
-      "poFile": "files/rpl-018-po.pdf",
-      "poNumber": "R2617-AM",
+      "id": "RPL-017",
+      "poFile": "files/rpl-017-po.pdf",
+      "poNumber": "R2616-AM",
       "customerName": "Alpine Manufacturing",
       "channel": "email",
-      "arrivedAt": "2026-07-02T08:15:00.000Z",
+      "arrivedAt": "2026-06-29T08:15:00.000Z",
       "lineCount": 3,
       "seededErrors": [
         {
@@ -412,26 +373,62 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-07-03T21:15:00.000Z",
+        "navisionCreatedAt": "2026-06-30T21:15:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-15",
-        "actualShipDate": "2026-07-22"
+        "promisedShipDate": "2026-07-12",
+        "actualShipDate": "2026-07-19"
+      }
+    },
+    {
+      "id": "RPL-018",
+      "poFile": "files/rpl-018-po.pdf",
+      "poNumber": "R2617-DDL",
+      "customerName": "Dubai Dist LLC",
+      "channel": "email",
+      "arrivedAt": "2026-07-01T08:29:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-07-02T04:29:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-07-21",
+        "actualShipDate": "2026-07-21"
       }
     },
     {
       "id": "RPL-019",
       "poFile": "files/rpl-019-po.pdf",
-      "poNumber": "R2618-DDL",
-      "customerName": "Dubai Dist LLC",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-07-03T08:29:00.000Z",
+      "poNumber": "R2618-MP",
+      "customerName": "Meridian Parts",
+      "channel": "email",
+      "arrivedAt": "2026-07-06T08:12:00.000Z",
       "lineCount": 3,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-07-07T00:12:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-07-26",
+        "actualShipDate": "2026-07-25"
+      }
+    },
+    {
+      "id": "RPL-020",
+      "poFile": "files/rpl-020-po.pdf",
+      "poNumber": "R2619-NC",
+      "customerName": "Nova Controls",
+      "channel": "email",
+      "arrivedAt": "2026-07-06T03:12:00.000Z",
+      "lineCount": 2,
       "seededErrors": [
         {
           "code": "PRICE_MISMATCH",
-          "field": "lines[2].unitPrice",
-          "detail": "20.52 on the PO, 22.30 in Navision (8% lower)",
+          "field": "lines[0].unitPrice",
+          "detail": "60.80 on the PO, 64.00 in Navision (5% lower)",
           "resolution": {
             "action": "override",
             "reason": "Special deal agreed with the customer (simulated staff decision)."
@@ -440,130 +437,106 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-07-05T15:29:00.000Z",
+        "navisionCreatedAt": "2026-07-07T14:12:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-17",
-        "actualShipDate": "2026-07-21"
-      }
-    },
-    {
-      "id": "RPL-020",
-      "poFile": "files/rpl-020-po.pdf",
-      "poNumber": "R2619-KC",
-      "customerName": "Karachi Compute",
-      "channel": "email",
-      "arrivedAt": "2026-07-07T02:31:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "PART_ALIAS_SUGGESTED",
-          "field": "lines[0].partNo",
-          "detail": "AB-1234X written for AB1234X",
-          "resolution": {
-            "action": "use_suggestion"
-          }
-        }
-      ],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-07-08T21:31:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-27",
-        "actualShipDate": "2026-07-26"
+        "promisedShipDate": "2026-07-21",
+        "actualShipDate": "2026-07-20"
       }
     },
     {
       "id": "RPL-021",
       "poFile": "files/rpl-021-po.pdf",
-      "poNumber": "R2620-NC",
-      "customerName": "Nova Controls",
+      "poNumber": "R2620-MMT",
+      "customerName": "Muscat Micro Trading",
       "channel": "email",
-      "arrivedAt": "2026-07-09T03:12:00.000Z",
+      "arrivedAt": "2026-07-10T03:47:00.000Z",
       "lineCount": 2,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-07-09T13:12:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-27",
-        "actualShipDate": "2026-08-02"
-      }
-    },
-    {
-      "id": "RPL-022",
-      "poFile": "files/rpl-022-po.pdf",
-      "poNumber": "R2621-NC",
-      "customerName": "Nova Controls",
-      "channel": "email",
-      "arrivedAt": "2026-07-13T05:18:00.000Z",
-      "lineCount": 1,
       "seededErrors": [
         {
           "code": "QTY_EXCEEDS_STOCK",
-          "field": "lines[0].quantity",
-          "detail": "23 ordered, 12 in stock",
+          "field": "lines[1].quantity",
+          "detail": "60 ordered, 38 in stock",
           "resolution": {
             "action": "none"
           }
         }
       ],
       "spr": {
-        "partNo": "NAS-2B",
-        "quantity": 11
+        "partNo": "UPS-650",
+        "quantity": 22
       },
       "baseline": {
-        "navisionCreatedAt": "2026-07-14T16:18:00.000Z",
-        "sprSubmittedAt": "2026-07-13T16:18:00.000Z",
-        "sprDecidedAt": "2026-07-17T16:18:00.000Z",
-        "promisedShipDate": "2026-07-23",
-        "actualShipDate": "2026-07-22"
+        "navisionCreatedAt": "2026-07-11T17:47:00.000Z",
+        "sprSubmittedAt": "2026-07-10T21:47:00.000Z",
+        "sprDecidedAt": "2026-07-14T05:47:00.000Z",
+        "promisedShipDate": "2026-07-26",
+        "actualShipDate": "2026-07-25"
+      }
+    },
+    {
+      "id": "RPL-022",
+      "poFile": "files/rpl-022-po.pdf",
+      "poNumber": "R2621-LTP",
+      "customerName": "Lanka Tech Pte Ltd",
+      "channel": "email",
+      "arrivedAt": "2026-07-13T03:16:00.000Z",
+      "lineCount": 2,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-07-13T12:16:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-07-30",
+        "actualShipDate": "2026-07-31"
       }
     },
     {
       "id": "RPL-023",
       "poFile": "files/rpl-023-po.pdf",
-      "poNumber": "R2622-CPC",
-      "customerName": "Colombo PC House",
-      "channel": "email",
-      "arrivedAt": "2026-07-15T06:29:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "PART_ALIAS_SUGGESTED",
-          "field": "lines[0].partNo",
-          "detail": "AB-1234X written for AB1234X",
-          "resolution": {
-            "action": "use_suggestion"
-          }
-        }
-      ],
+      "poNumber": "R2622-BD",
+      "customerName": "Beacon Devices",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-07-14T06:26:00.000Z",
+      "lineCount": 2,
+      "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-07-16T07:29:00.000Z",
+        "navisionCreatedAt": "2026-07-15T02:26:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-29",
-        "actualShipDate": "2026-07-28"
+        "promisedShipDate": "2026-08-04",
+        "actualShipDate": "2026-08-04"
       }
     },
     {
       "id": "RPL-024",
       "poFile": "files/rpl-024-po.pdf",
-      "poNumber": "R2623-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-07-16T06:09:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
-      "spr": null,
+      "poNumber": "R2623-NC",
+      "customerName": "Nova Controls",
+      "channel": "email",
+      "arrivedAt": "2026-07-16T08:23:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [
+        {
+          "code": "QTY_EXCEEDS_STOCK",
+          "field": "lines[0].quantity",
+          "detail": "27 ordered, 0 in stock",
+          "resolution": {
+            "action": "none"
+          }
+        }
+      ],
+      "spr": {
+        "partNo": "RAM-16D4",
+        "quantity": 27
+      },
       "baseline": {
-        "navisionCreatedAt": "2026-07-16T11:09:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-07-28",
+        "navisionCreatedAt": "2026-07-17T19:23:00.000Z",
+        "sprSubmittedAt": "2026-07-16T12:23:00.000Z",
+        "sprDecidedAt": "2026-07-19T23:23:00.000Z",
+        "promisedShipDate": "2026-08-02",
         "actualShipDate": "2026-08-01"
       }
     },
@@ -572,50 +545,44 @@
       "poFile": "files/rpl-025-po.pdf",
       "poNumber": "R2624-MMT",
       "customerName": "Muscat Micro Trading",
-      "channel": "email",
-      "arrivedAt": "2026-07-20T09:59:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
-      "spr": null,
+      "channel": "whatsapp",
+      "arrivedAt": "2026-07-20T03:41:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "QTY_EXCEEDS_STOCK",
+          "field": "lines[0].quantity",
+          "detail": "25 ordered, 0 in stock",
+          "resolution": {
+            "action": "none"
+          }
+        }
+      ],
+      "spr": {
+        "partNo": "RAM-16D4",
+        "quantity": 25
+      },
       "baseline": {
-        "navisionCreatedAt": "2026-07-20T13:59:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-09",
-        "actualShipDate": "2026-08-09"
+        "navisionCreatedAt": "2026-07-21T18:41:00.000Z",
+        "sprSubmittedAt": "2026-07-20T19:41:00.000Z",
+        "sprDecidedAt": "2026-07-23T22:41:00.000Z",
+        "promisedShipDate": "2026-08-03",
+        "actualShipDate": "2026-08-04"
       }
     },
     {
       "id": "RPL-026",
       "poFile": "files/rpl-026-po.pdf",
-      "poNumber": "R2625-DDL",
-      "customerName": "Dubai Dist LLC",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-07-22T02:24:00.000Z",
-      "lineCount": 3,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-07-22T15:24:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-01",
-        "actualShipDate": "2026-08-08"
-      }
-    },
-    {
-      "id": "RPL-027",
-      "poFile": "files/rpl-027-po.pdf",
-      "poNumber": "R2626-MP",
-      "customerName": "Meridian Parts",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-07-24T09:54:00.000Z",
+      "poNumber": "R2625-MMT",
+      "customerName": "Muscat Micro Trading",
+      "channel": "email",
+      "arrivedAt": "2026-07-23T07:13:00.000Z",
       "lineCount": 2,
       "seededErrors": [
         {
           "code": "PRICE_MISMATCH",
-          "field": "lines[0].unitPrice",
-          "detail": "82.77 on the PO, 89.00 in Navision (7% lower)",
+          "field": "lines[1].unitPrice",
+          "detail": "18.51 on the PO, 19.90 in Navision (7% lower)",
           "resolution": {
             "action": "override",
             "reason": "Special deal agreed with the customer (simulated staff decision)."
@@ -624,223 +591,210 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-07-25T16:54:00.000Z",
+        "navisionCreatedAt": "2026-07-25T07:13:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-06",
-        "actualShipDate": "2026-08-15"
+        "promisedShipDate": "2026-08-08",
+        "actualShipDate": "2026-08-14"
+      }
+    },
+    {
+      "id": "RPL-027",
+      "poFile": "files/rpl-027-po.pdf",
+      "poNumber": "R2626-NC",
+      "customerName": "Nova Controls",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-07-27T06:39:00.000Z",
+      "lineCount": 2,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-07-27T23:39:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-08-16",
+        "actualShipDate": "2026-08-14"
       }
     },
     {
       "id": "RPL-028",
       "poFile": "files/rpl-028-po.pdf",
-      "poNumber": "R2627-CPC",
-      "customerName": "Colombo PC House",
+      "poNumber": "R2627-AM",
+      "customerName": "Alpine Manufacturing",
       "channel": "email",
-      "arrivedAt": "2026-07-28T02:54:00.000Z",
-      "lineCount": 2,
+      "arrivedAt": "2026-07-28T04:58:00.000Z",
+      "lineCount": 1,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-07-28T13:54:00.000Z",
+        "navisionCreatedAt": "2026-07-28T21:58:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
         "promisedShipDate": "2026-08-17",
-        "actualShipDate": "2026-08-17"
+        "actualShipDate": "2026-08-20"
       }
     },
     {
       "id": "RPL-029",
       "poFile": "files/rpl-029-po.pdf",
-      "poNumber": "R2628-AM",
-      "customerName": "Alpine Manufacturing",
+      "poNumber": "R2628-CPC",
+      "customerName": "Colombo PC House",
       "channel": "whatsapp",
-      "arrivedAt": "2026-07-29T05:34:00.000Z",
-      "lineCount": 3,
+      "arrivedAt": "2026-07-29T01:38:00.000Z",
+      "lineCount": 1,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-07-29T23:34:00.000Z",
+        "navisionCreatedAt": "2026-07-29T08:38:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-18",
-        "actualShipDate": "2026-08-16"
+        "promisedShipDate": "2026-08-19",
+        "actualShipDate": "2026-08-23"
       }
     },
     {
       "id": "RPL-030",
       "poFile": "files/rpl-030-po.pdf",
-      "poNumber": "R2629-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
-      "channel": "email",
-      "arrivedAt": "2026-08-03T09:38:00.000Z",
+      "poNumber": "R2629-KC",
+      "customerName": "Karachi Compute",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-08-03T07:43:00.000Z",
       "lineCount": 2,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-03T17:38:00.000Z",
+        "navisionCreatedAt": "2026-08-03T22:43:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-14",
-        "actualShipDate": "2026-08-15"
+        "promisedShipDate": "2026-08-21",
+        "actualShipDate": "2026-08-26"
       }
     },
     {
       "id": "RPL-031",
       "poFile": "files/rpl-031-po.pdf",
-      "poNumber": "R2630-AM",
-      "customerName": "Alpine Manufacturing",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-08-04T01:06:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
+      "poNumber": "R2630-MP",
+      "customerName": "Meridian Parts",
+      "channel": "email",
+      "arrivedAt": "2026-08-04T01:17:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "PRICE_MISMATCH",
+          "field": "lines[0].unitPrice",
+          "detail": "58.88 on the PO, 64.00 in Navision (8% lower)",
+          "resolution": {
+            "action": "override",
+            "reason": "Special deal agreed with the customer (simulated staff decision)."
+          }
+        }
+      ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-04T20:06:00.000Z",
+        "navisionCreatedAt": "2026-08-05T23:17:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-19",
-        "actualShipDate": "2026-08-17"
+        "promisedShipDate": "2026-08-22",
+        "actualShipDate": "2026-08-20"
       }
     },
     {
       "id": "RPL-032",
       "poFile": "files/rpl-032-po.pdf",
-      "poNumber": "R2631-DDL",
-      "customerName": "Dubai Dist LLC",
-      "channel": "email",
-      "arrivedAt": "2026-08-07T07:10:00.000Z",
+      "poNumber": "R2631-NC",
+      "customerName": "Nova Controls",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-08-06T08:23:00.000Z",
       "lineCount": 2,
-      "seededErrors": [
-        {
-          "code": "QTY_EXCEEDS_STOCK",
-          "field": "lines[1].quantity",
-          "detail": "18 ordered, 9 in stock",
-          "resolution": {
-            "action": "none"
-          }
-        }
-      ],
-      "spr": {
-        "partNo": "PRJ-X20",
-        "quantity": 9
-      },
+      "seededErrors": [],
+      "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-08T23:10:00.000Z",
-        "sprSubmittedAt": "2026-08-07T13:10:00.000Z",
-        "sprDecidedAt": "2026-08-09T15:10:00.000Z",
-        "promisedShipDate": "2026-08-23",
-        "actualShipDate": "2026-08-24"
+        "navisionCreatedAt": "2026-08-07T03:23:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-08-16",
+        "actualShipDate": "2026-08-17"
       }
     },
     {
       "id": "RPL-033",
       "poFile": "files/rpl-033-po.pdf",
-      "poNumber": "R2632-MMT",
-      "customerName": "Muscat Micro Trading",
+      "poNumber": "R2632-DDL",
+      "customerName": "Dubai Dist LLC",
       "channel": "email",
-      "arrivedAt": "2026-08-10T02:40:00.000Z",
-      "lineCount": 2,
+      "arrivedAt": "2026-08-10T05:18:00.000Z",
+      "lineCount": 1,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-10T19:40:00.000Z",
+        "navisionCreatedAt": "2026-08-11T00:18:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-24",
-        "actualShipDate": "2026-08-23"
+        "promisedShipDate": "2026-08-22",
+        "actualShipDate": "2026-08-21"
       }
     },
     {
       "id": "RPL-034",
       "poFile": "files/rpl-034-po.pdf",
-      "poNumber": "R2633-NC",
-      "customerName": "Nova Controls",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-08-11T09:20:00.000Z",
+      "poNumber": "R2633-BD",
+      "customerName": "Beacon Devices",
+      "channel": "email",
+      "arrivedAt": "2026-08-11T02:43:00.000Z",
       "lineCount": 3,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-08-11T13:20:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-26",
-        "actualShipDate": "2026-08-24"
-      }
-    },
-    {
-      "id": "RPL-035",
-      "poFile": "files/rpl-035-po.pdf",
-      "poNumber": "R2634-CPC",
-      "customerName": "Colombo PC House",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-08-14T09:13:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-08-14T17:13:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-24",
-        "actualShipDate": "2026-08-24"
-      }
-    },
-    {
-      "id": "RPL-036",
-      "poFile": "files/rpl-036-po.pdf",
-      "poNumber": "R2635-MMT",
-      "customerName": "Muscat Micro Trading",
-      "channel": "email",
-      "arrivedAt": "2026-08-17T03:24:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-08-17T14:24:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-08-28",
-        "actualShipDate": "2026-09-02"
-      }
-    },
-    {
-      "id": "RPL-037",
-      "poFile": "files/rpl-037-po.pdf",
-      "poNumber": "R2636-CPC",
-      "customerName": "Colombo PC House",
-      "channel": "email",
-      "arrivedAt": "2026-08-19T02:38:00.000Z",
-      "lineCount": 1,
       "seededErrors": [
         {
-          "code": "PART_NOT_FOUND",
+          "code": "PART_ALIAS_SUGGESTED",
           "field": "lines[0].partNo",
-          "detail": "VV-3105 is not in Navision; the customer meant CD-77",
+          "detail": "AB-1234X written for AB1234X",
           "resolution": {
-            "action": "set_value",
-            "field": "lines[0].partNo",
-            "value": "CD-77"
+            "action": "use_suggestion"
           }
         }
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-19T23:38:00.000Z",
+        "navisionCreatedAt": "2026-08-12T15:43:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-07",
-        "actualShipDate": "2026-09-06"
+        "promisedShipDate": "2026-08-29",
+        "actualShipDate": "2026-08-29"
       }
     },
     {
-      "id": "RPL-038",
-      "poFile": "files/rpl-038-po.pdf",
-      "poNumber": "R2637-NC",
-      "customerName": "Nova Controls",
+      "id": "RPL-035",
+      "poFile": "files/rpl-035-po.pdf",
+      "poNumber": "R2634-LTP",
+      "customerName": "Lanka Tech Pte Ltd",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-08-14T02:27:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "PART_ALIAS_SUGGESTED",
+          "field": "lines[0].partNo",
+          "detail": "AB-1234X written for AB1234X",
+          "resolution": {
+            "action": "use_suggestion"
+          }
+        }
+      ],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-08-15T17:27:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-08-28",
+        "actualShipDate": "2026-08-28"
+      }
+    },
+    {
+      "id": "RPL-036",
+      "poFile": "files/rpl-036-po.pdf",
+      "poNumber": "R2635-AM",
+      "customerName": "Alpine Manufacturing",
       "channel": "email",
-      "arrivedAt": "2026-08-24T08:11:00.000Z",
+      "arrivedAt": "2026-08-18T06:06:00.000Z",
       "lineCount": 3,
       "seededErrors": [
         {
@@ -854,20 +808,20 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-26T06:11:00.000Z",
+        "navisionCreatedAt": "2026-08-20T04:06:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-05",
-        "actualShipDate": "2026-09-03"
+        "promisedShipDate": "2026-08-30",
+        "actualShipDate": "2026-08-28"
       }
     },
     {
-      "id": "RPL-039",
-      "poFile": "files/rpl-039-po.pdf",
-      "poNumber": "R2638-CPC",
+      "id": "RPL-037",
+      "poFile": "files/rpl-037-po.pdf",
+      "poNumber": "R2636-CPC",
       "customerName": "Colombo PC House",
       "channel": "email",
-      "arrivedAt": "2026-08-24T01:15:00.000Z",
+      "arrivedAt": "2026-08-19T01:15:00.000Z",
       "lineCount": 3,
       "seededErrors": [
         {
@@ -882,98 +836,98 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-08-25T18:15:00.000Z",
+        "navisionCreatedAt": "2026-08-20T18:15:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-09",
-        "actualShipDate": "2026-09-17"
+        "promisedShipDate": "2026-09-04",
+        "actualShipDate": "2026-09-12"
+      }
+    },
+    {
+      "id": "RPL-038",
+      "poFile": "files/rpl-038-po.pdf",
+      "poNumber": "R2637-BD",
+      "customerName": "Beacon Devices",
+      "channel": "email",
+      "arrivedAt": "2026-08-24T06:03:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "QTY_EXCEEDS_STOCK",
+          "field": "lines[0].quantity",
+          "detail": "59 ordered, 38 in stock",
+          "resolution": {
+            "action": "none"
+          }
+        }
+      ],
+      "spr": {
+        "partNo": "UPS-650",
+        "quantity": 21
+      },
+      "baseline": {
+        "navisionCreatedAt": "2026-08-26T02:03:00.000Z",
+        "sprSubmittedAt": "2026-08-24T16:03:00.000Z",
+        "sprDecidedAt": "2026-08-29T06:03:00.000Z",
+        "promisedShipDate": "2026-09-07",
+        "actualShipDate": "2026-09-05"
+      }
+    },
+    {
+      "id": "RPL-039",
+      "poFile": "files/rpl-039-po.pdf",
+      "poNumber": "R2638-LTP",
+      "customerName": "Lanka Tech Pte Ltd",
+      "channel": "email",
+      "arrivedAt": "2026-08-25T05:05:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-08-25T16:05:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-09-11",
+        "actualShipDate": "2026-09-11"
       }
     },
     {
       "id": "RPL-040",
       "poFile": "files/rpl-040-po.pdf",
-      "poNumber": "R2639-BD",
-      "customerName": "Beacon Devices",
-      "channel": "email",
-      "arrivedAt": "2026-08-27T06:03:00.000Z",
+      "poNumber": "R2639-CPC",
+      "customerName": "Colombo PC House",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-08-28T06:31:00.000Z",
       "lineCount": 1,
       "seededErrors": [
         {
           "code": "QTY_EXCEEDS_STOCK",
           "field": "lines[0].quantity",
-          "detail": "66 ordered, 45 in stock",
+          "detail": "17 ordered, 9 in stock",
           "resolution": {
             "action": "none"
           }
         }
       ],
       "spr": {
-        "partNo": "EF-9",
-        "quantity": 21
+        "partNo": "PRJ-X20",
+        "quantity": 8
       },
       "baseline": {
-        "navisionCreatedAt": "2026-08-29T02:03:00.000Z",
-        "sprSubmittedAt": "2026-08-27T16:03:00.000Z",
-        "sprDecidedAt": "2026-09-01T06:03:00.000Z",
-        "promisedShipDate": "2026-09-10",
-        "actualShipDate": "2026-09-08"
+        "navisionCreatedAt": "2026-08-29T18:31:00.000Z",
+        "sprSubmittedAt": "2026-08-29T08:31:00.000Z",
+        "sprDecidedAt": "2026-09-02T15:31:00.000Z",
+        "promisedShipDate": "2026-09-08",
+        "actualShipDate": "2026-09-06"
       }
     },
     {
       "id": "RPL-041",
       "poFile": "files/rpl-041-po.pdf",
-      "poNumber": "R2640-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
-      "channel": "email",
-      "arrivedAt": "2026-08-31T05:05:00.000Z",
-      "lineCount": 3,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-08-31T16:05:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-17",
-        "actualShipDate": "2026-09-17"
-      }
-    },
-    {
-      "id": "RPL-042",
-      "poFile": "files/rpl-042-po.pdf",
-      "poNumber": "R2641-CPC",
-      "customerName": "Colombo PC House",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-09-02T06:31:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "QTY_EXCEEDS_STOCK",
-          "field": "lines[0].quantity",
-          "detail": "20 ordered, 12 in stock",
-          "resolution": {
-            "action": "none"
-          }
-        }
-      ],
-      "spr": {
-        "partNo": "NAS-2B",
-        "quantity": 8
-      },
-      "baseline": {
-        "navisionCreatedAt": "2026-09-03T18:31:00.000Z",
-        "sprSubmittedAt": "2026-09-03T08:31:00.000Z",
-        "sprDecidedAt": "2026-09-07T15:31:00.000Z",
-        "promisedShipDate": "2026-09-13",
-        "actualShipDate": "2026-09-11"
-      }
-    },
-    {
-      "id": "RPL-043",
-      "poFile": "files/rpl-043-po.pdf",
-      "poNumber": "R2642-BD",
+      "poNumber": "R2640-BD",
       "customerName": "Beacon Devices",
       "channel": "email",
-      "arrivedAt": "2026-09-04T02:44:00.000Z",
+      "arrivedAt": "2026-08-31T02:44:00.000Z",
       "lineCount": 3,
       "seededErrors": [
         {
@@ -988,57 +942,102 @@
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-05T07:44:00.000Z",
+        "navisionCreatedAt": "2026-09-01T07:44:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-15",
-        "actualShipDate": "2026-09-16"
+        "promisedShipDate": "2026-09-11",
+        "actualShipDate": "2026-09-12"
       }
     },
     {
-      "id": "RPL-044",
-      "poFile": "files/rpl-044-po.pdf",
-      "poNumber": "R2643-MP",
+      "id": "RPL-042",
+      "poFile": "files/rpl-042-po.pdf",
+      "poNumber": "R2641-MP",
       "customerName": "Meridian Parts",
       "channel": "email",
-      "arrivedAt": "2026-09-07T02:58:00.000Z",
+      "arrivedAt": "2026-09-02T02:58:00.000Z",
       "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-07T17:58:00.000Z",
+        "navisionCreatedAt": "2026-09-02T17:58:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-22",
-        "actualShipDate": "2026-09-22"
+        "promisedShipDate": "2026-09-17",
+        "actualShipDate": "2026-09-17"
       }
     },
     {
-      "id": "RPL-045",
-      "poFile": "files/rpl-045-po.pdf",
-      "poNumber": "R2644-DDL",
+      "id": "RPL-043",
+      "poFile": "files/rpl-043-po.pdf",
+      "poNumber": "R2642-DDL",
       "customerName": "Dubai Dist LLC",
       "channel": "email",
-      "arrivedAt": "2026-09-10T03:27:00.000Z",
+      "arrivedAt": "2026-09-07T03:27:00.000Z",
       "lineCount": 2,
       "seededErrors": [
         {
           "code": "QTY_EXCEEDS_STOCK",
           "field": "lines[0].quantity",
-          "detail": "50 ordered, 38 in stock",
+          "detail": "24 ordered, 12 in stock",
           "resolution": {
             "action": "none"
           }
         }
       ],
       "spr": {
-        "partNo": "UPS-650",
+        "partNo": "NAS-2B",
         "quantity": 12
       },
       "baseline": {
-        "navisionCreatedAt": "2026-09-11T20:27:00.000Z",
-        "sprSubmittedAt": "2026-09-10T21:27:00.000Z",
-        "sprDecidedAt": "2026-09-14T15:27:00.000Z",
+        "navisionCreatedAt": "2026-09-08T20:27:00.000Z",
+        "sprSubmittedAt": "2026-09-07T21:27:00.000Z",
+        "sprDecidedAt": "2026-09-11T15:27:00.000Z",
+        "promisedShipDate": "2026-09-24",
+        "actualShipDate": "2026-09-23"
+      }
+    },
+    {
+      "id": "RPL-044",
+      "poFile": "files/rpl-044-po.pdf",
+      "poNumber": "R2643-MMT",
+      "customerName": "Muscat Micro Trading",
+      "channel": "email",
+      "arrivedAt": "2026-09-07T01:15:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-09-07T06:15:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-09-18",
+        "actualShipDate": "2026-09-17"
+      }
+    },
+    {
+      "id": "RPL-045",
+      "poFile": "files/rpl-045-po.pdf",
+      "poNumber": "R2644-MIT",
+      "customerName": "Male Island Tech",
+      "channel": "email",
+      "arrivedAt": "2026-09-10T03:51:00.000Z",
+      "lineCount": 2,
+      "seededErrors": [
+        {
+          "code": "CUSTOMER_NOT_FOUND",
+          "field": "customerName",
+          "detail": "Male Island Tech is not in Navision",
+          "resolution": {
+            "action": "propose_customer_card"
+          }
+        }
+      ],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-09-11T17:51:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
         "promisedShipDate": "2026-09-27",
         "actualShipDate": "2026-09-26"
       }
@@ -1046,33 +1045,81 @@
     {
       "id": "RPL-046",
       "poFile": "files/rpl-046-po.pdf",
-      "poNumber": "R2645-MMT",
-      "customerName": "Muscat Micro Trading",
+      "poNumber": "R2645-MP",
+      "customerName": "Meridian Parts",
       "channel": "email",
-      "arrivedAt": "2026-09-14T01:15:00.000Z",
+      "arrivedAt": "2026-09-14T07:46:00.000Z",
       "lineCount": 1,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-14T06:15:00.000Z",
+        "navisionCreatedAt": "2026-09-14T23:46:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-09-25",
-        "actualShipDate": "2026-09-24"
+        "promisedShipDate": "2026-10-01",
+        "actualShipDate": "2026-09-30"
       }
     },
     {
       "id": "RPL-047",
       "poFile": "files/rpl-047-po.pdf",
-      "poNumber": "R2646-MP",
-      "customerName": "Meridian Parts",
+      "poNumber": "R2646-DDL",
+      "customerName": "Dubai Dist LLC",
       "channel": "email",
-      "arrivedAt": "2026-09-15T03:51:00.000Z",
+      "arrivedAt": "2026-09-15T08:45:00.000Z",
+      "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "QTY_EXCEEDS_STOCK",
+          "field": "lines[0].quantity",
+          "detail": "34 ordered, 9 in stock",
+          "resolution": {
+            "action": "none"
+          }
+        }
+      ],
+      "spr": {
+        "partNo": "PRJ-X20",
+        "quantity": 25
+      },
+      "baseline": {
+        "navisionCreatedAt": "2026-09-17T08:45:00.000Z",
+        "sprSubmittedAt": "2026-09-15T22:45:00.000Z",
+        "sprDecidedAt": "2026-09-19T21:45:00.000Z",
+        "promisedShipDate": "2026-09-30",
+        "actualShipDate": "2026-10-07"
+      }
+    },
+    {
+      "id": "RPL-048",
+      "poFile": "files/rpl-048-po.pdf",
+      "poNumber": "R2647-MP",
+      "customerName": "Meridian Parts",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-09-18T07:15:00.000Z",
       "lineCount": 2,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-15T06:51:00.000Z",
+        "navisionCreatedAt": "2026-09-18T18:15:00.000Z",
+        "sprSubmittedAt": null,
+        "sprDecidedAt": null,
+        "promisedShipDate": "2026-10-09",
+        "actualShipDate": "2026-10-08"
+      }
+    },
+    {
+      "id": "RPL-049",
+      "poFile": "files/rpl-049-po.pdf",
+      "poNumber": "R2648-DDL",
+      "customerName": "Dubai Dist LLC",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-09-21T09:10:00.000Z",
+      "lineCount": 2,
+      "seededErrors": [],
+      "spr": null,
+      "baseline": {
+        "navisionCreatedAt": "2026-09-21T16:10:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
         "promisedShipDate": "2026-10-04",
@@ -1080,85 +1127,57 @@
       }
     },
     {
-      "id": "RPL-048",
-      "poFile": "files/rpl-048-po.pdf",
-      "poNumber": "R2647-NC",
-      "customerName": "Nova Controls",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-09-18T07:41:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-09-19T00:41:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-02",
-        "actualShipDate": "2026-10-10"
-      }
-    },
-    {
-      "id": "RPL-049",
-      "poFile": "files/rpl-049-po.pdf",
-      "poNumber": "R2648-KC",
-      "customerName": "Karachi Compute",
-      "channel": "email",
-      "arrivedAt": "2026-09-21T02:00:00.000Z",
-      "lineCount": 1,
-      "seededErrors": [],
-      "spr": null,
-      "baseline": {
-        "navisionCreatedAt": "2026-09-21T20:00:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-09",
-        "actualShipDate": "2026-10-07"
-      }
-    },
-    {
       "id": "RPL-050",
       "poFile": "files/rpl-050-po.pdf",
-      "poNumber": "R2649-KC",
-      "customerName": "Karachi Compute",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-09-22T07:21:00.000Z",
+      "poNumber": "R2649-DDL",
+      "customerName": "Dubai Dist LLC",
+      "channel": "email",
+      "arrivedAt": "2026-09-23T01:45:00.000Z",
       "lineCount": 3,
       "seededErrors": [
         {
-          "code": "PRICE_MISMATCH",
-          "field": "lines[1].unitPrice",
-          "detail": "14.34 on the PO, 15.25 in Navision (6% lower)",
+          "code": "PART_ALIAS_SUGGESTED",
+          "field": "lines[2].partNo",
+          "detail": "LP15S written for LP-15S",
           "resolution": {
-            "action": "override",
-            "reason": "Special deal agreed with the customer (simulated staff decision)."
+            "action": "use_suggestion"
           }
         }
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-23T20:21:00.000Z",
+        "navisionCreatedAt": "2026-09-23T22:45:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-13",
-        "actualShipDate": "2026-10-12"
+        "promisedShipDate": "2026-10-04",
+        "actualShipDate": "2026-10-11"
       }
     },
     {
       "id": "RPL-051",
       "poFile": "files/rpl-051-po.pdf",
-      "poNumber": "R2650-DDL",
-      "customerName": "Dubai Dist LLC",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-09-25T09:10:00.000Z",
-      "lineCount": 2,
-      "seededErrors": [],
+      "poNumber": "R2650-MP",
+      "customerName": "Meridian Parts",
+      "channel": "email",
+      "arrivedAt": "2026-09-25T01:48:00.000Z",
+      "lineCount": 3,
+      "seededErrors": [
+        {
+          "code": "PART_ALIAS_SUGGESTED",
+          "field": "lines[0].partNo",
+          "detail": "GH310 written for GH-310",
+          "resolution": {
+            "action": "use_suggestion"
+          }
+        }
+      ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-25T16:10:00.000Z",
+        "navisionCreatedAt": "2026-09-26T20:48:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-08",
-        "actualShipDate": "2026-10-06"
+        "promisedShipDate": "2026-10-11",
+        "actualShipDate": "2026-10-09"
       }
     },
     {
@@ -1167,80 +1186,70 @@
       "poNumber": "R2651-DDL",
       "customerName": "Dubai Dist LLC",
       "channel": "email",
-      "arrivedAt": "2026-09-28T01:45:00.000Z",
-      "lineCount": 3,
-      "seededErrors": [
-        {
-          "code": "PRICE_MISMATCH",
-          "field": "lines[0].unitPrice",
-          "detail": "25.53 on the PO, 27.75 in Navision (8% lower)",
-          "resolution": {
-            "action": "override",
-            "reason": "Special deal agreed with the customer (simulated staff decision)."
-          }
-        }
-      ],
+      "arrivedAt": "2026-09-28T01:30:00.000Z",
+      "lineCount": 2,
+      "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-09-30T09:45:00.000Z",
+        "navisionCreatedAt": "2026-09-28T09:30:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-08",
-        "actualShipDate": "2026-10-10"
+        "promisedShipDate": "2026-10-12",
+        "actualShipDate": "2026-10-20"
       }
     },
     {
       "id": "RPL-053",
       "poFile": "files/rpl-053-po.pdf",
-      "poNumber": "R2652-LTP",
-      "customerName": "Lanka Tech Pte Ltd",
-      "channel": "email",
-      "arrivedAt": "2026-10-01T05:09:00.000Z",
-      "lineCount": 3,
+      "poNumber": "R2652-MP",
+      "customerName": "Meridian Parts",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-09-30T09:33:00.000Z",
+      "lineCount": 1,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-01T09:09:00.000Z",
+        "navisionCreatedAt": "2026-09-30T17:33:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
         "promisedShipDate": "2026-10-14",
-        "actualShipDate": "2026-10-14"
+        "actualShipDate": "2026-10-13"
       }
     },
     {
       "id": "RPL-054",
       "poFile": "files/rpl-054-po.pdf",
-      "poNumber": "R2653-AM",
-      "customerName": "Alpine Manufacturing",
+      "poNumber": "R2653-MP",
+      "customerName": "Meridian Parts",
       "channel": "email",
-      "arrivedAt": "2026-10-05T06:32:00.000Z",
+      "arrivedAt": "2026-10-05T09:39:00.000Z",
       "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-05T13:32:00.000Z",
+        "navisionCreatedAt": "2026-10-05T22:39:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-23",
-        "actualShipDate": "2026-10-22"
+        "promisedShipDate": "2026-10-25",
+        "actualShipDate": "2026-10-24"
       }
     },
     {
       "id": "RPL-055",
       "poFile": "files/rpl-055-po.pdf",
-      "poNumber": "R2654-DIT",
-      "customerName": "Dhaka IT Solutions",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-10-06T03:21:00.000Z",
-      "lineCount": 3,
+      "poNumber": "R2654-BD",
+      "customerName": "Beacon Devices",
+      "channel": "email",
+      "arrivedAt": "2026-10-06T02:36:00.000Z",
+      "lineCount": 2,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-06T17:21:00.000Z",
+        "navisionCreatedAt": "2026-10-06T14:36:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
         "promisedShipDate": "2026-10-20",
-        "actualShipDate": "2026-10-18"
+        "actualShipDate": "2026-10-19"
       }
     },
     {
@@ -1249,26 +1258,28 @@
       "poNumber": "R2655-MMT",
       "customerName": "Muscat Micro Trading",
       "channel": "email",
-      "arrivedAt": "2026-10-09T06:56:00.000Z",
-      "lineCount": 1,
+      "arrivedAt": "2026-10-08T09:44:00.000Z",
+      "lineCount": 3,
       "seededErrors": [
         {
-          "code": "PRICE_MISMATCH",
-          "field": "lines[0].unitPrice",
-          "detail": "49.26 on the PO, 52.40 in Navision (6% lower)",
+          "code": "QTY_EXCEEDS_STOCK",
+          "field": "lines[1].quantity",
+          "detail": "74 ordered, 45 in stock",
           "resolution": {
-            "action": "override",
-            "reason": "Special deal agreed with the customer (simulated staff decision)."
+            "action": "none"
           }
         }
       ],
-      "spr": null,
+      "spr": {
+        "partNo": "EF-9",
+        "quantity": 29
+      },
       "baseline": {
-        "navisionCreatedAt": "2026-10-11T14:56:00.000Z",
-        "sprSubmittedAt": null,
-        "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-21",
-        "actualShipDate": "2026-10-19"
+        "navisionCreatedAt": "2026-10-10T00:44:00.000Z",
+        "sprSubmittedAt": "2026-10-08T22:44:00.000Z",
+        "sprDecidedAt": "2026-10-12T11:44:00.000Z",
+        "promisedShipDate": "2026-10-23",
+        "actualShipDate": "2026-10-23"
       }
     },
     {
@@ -1276,90 +1287,93 @@
       "poFile": "files/rpl-057-po.pdf",
       "poNumber": "R2656-DDL",
       "customerName": "Dubai Dist LLC",
-      "channel": "email",
-      "arrivedAt": "2026-10-12T02:54:00.000Z",
-      "lineCount": 2,
+      "channel": "whatsapp",
+      "arrivedAt": "2026-10-12T01:07:00.000Z",
+      "lineCount": 1,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-12T12:54:00.000Z",
+        "navisionCreatedAt": "2026-10-12T12:07:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-28",
+        "promisedShipDate": "2026-10-26",
         "actualShipDate": "2026-10-26"
       }
     },
     {
       "id": "RPL-058",
       "poFile": "files/rpl-058-po.pdf",
-      "poNumber": "R2657-NC",
-      "customerName": "Nova Controls",
+      "poNumber": "R2657-DIT",
+      "customerName": "Dhaka IT Solutions",
       "channel": "email",
-      "arrivedAt": "2026-10-13T01:56:00.000Z",
+      "arrivedAt": "2026-10-14T08:50:00.000Z",
       "lineCount": 3,
       "seededErrors": [],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-13T05:56:00.000Z",
+        "navisionCreatedAt": "2026-10-14T17:50:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-11-03",
-        "actualShipDate": "2026-11-09"
+        "promisedShipDate": "2026-11-01",
+        "actualShipDate": "2026-10-31"
       }
     },
     {
       "id": "RPL-059",
       "poFile": "files/rpl-059-po.pdf",
-      "poNumber": "R2658-MMT",
-      "customerName": "Muscat Micro Trading",
-      "channel": "email",
-      "arrivedAt": "2026-10-15T06:28:00.000Z",
+      "poNumber": "R2658-DDL",
+      "customerName": "Dubai Dist LLC",
+      "channel": "whatsapp",
+      "arrivedAt": "2026-10-15T06:21:00.000Z",
       "lineCount": 1,
       "seededErrors": [
         {
-          "code": "PART_ALIAS_SUGGESTED",
+          "code": "PART_NOT_FOUND",
           "field": "lines[0].partNo",
-          "detail": "AB-1234X written for AB1234X",
+          "detail": "JK-88021 is not in Navision; the customer meant KM-2210",
           "resolution": {
-            "action": "use_suggestion"
+            "action": "set_value",
+            "field": "lines[0].partNo",
+            "value": "KM-2210"
           }
         }
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-17T06:28:00.000Z",
+        "navisionCreatedAt": "2026-10-16T13:21:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-10-27",
-        "actualShipDate": "2026-10-25"
+        "promisedShipDate": "2026-11-05",
+        "actualShipDate": "2026-11-11"
       }
     },
     {
       "id": "RPL-060",
       "poFile": "files/rpl-060-po.pdf",
-      "poNumber": "R2659-DIT",
-      "customerName": "Dhaka IT Solutions",
-      "channel": "whatsapp",
-      "arrivedAt": "2026-10-19T04:37:00.000Z",
+      "poNumber": "R2659-MMT",
+      "customerName": "Muscat Micro Trading",
+      "channel": "email",
+      "arrivedAt": "2026-10-19T04:12:00.000Z",
       "lineCount": 3,
       "seededErrors": [
         {
-          "code": "PRICE_MISMATCH",
-          "field": "lines[1].unitPrice",
-          "detail": "50.30 on the PO, 52.40 in Navision (4% lower)",
+          "code": "PART_NOT_FOUND",
+          "field": "lines[0].partNo",
+          "detail": "QQ-00417 is not in Navision; the customer meant TB-240",
           "resolution": {
-            "action": "override",
-            "reason": "Special deal agreed with the customer (simulated staff decision)."
+            "action": "set_value",
+            "field": "lines[0].partNo",
+            "value": "TB-240"
           }
         }
       ],
       "spr": null,
       "baseline": {
-        "navisionCreatedAt": "2026-10-20T17:37:00.000Z",
+        "navisionCreatedAt": "2026-10-20T12:12:00.000Z",
         "sprSubmittedAt": null,
         "sprDecidedAt": null,
-        "promisedShipDate": "2026-11-08",
-        "actualShipDate": "2026-11-07"
+        "promisedShipDate": "2026-11-09",
+        "actualShipDate": "2026-11-09"
       }
     }
   ],
@@ -1367,8 +1381,8 @@
     {
       "id": "RPR-001",
       "poNumber": "PO-7001",
-      "vendorName": "Nova Logistics",
-      "arrivedAt": "2026-05-18T04:37:00.000Z",
+      "vendorName": "Apex Industrial",
+      "arrivedAt": "2026-05-21T07:21:00.000Z",
       "invoiceFile": "files/rpr-001-invoice.pdf",
       "packingListFile": "files/rpr-001-packing-list.pdf",
       "lineCount": 1,
@@ -1378,43 +1392,49 @@
       "id": "RPR-002",
       "poNumber": "PO-7002",
       "vendorName": "Beta Parts",
-      "arrivedAt": "2026-05-29T03:33:00.000Z",
+      "arrivedAt": "2026-05-28T06:37:00.000Z",
       "invoiceFile": "files/rpr-002-invoice.pdf",
       "packingListFile": "files/rpr-002-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": []
-    },
-    {
-      "id": "RPR-003",
-      "poNumber": "PO-7003",
-      "vendorName": "Nova Logistics",
-      "arrivedAt": "2026-06-03T08:12:00.000Z",
-      "invoiceFile": "files/rpr-003-invoice.pdf",
-      "packingListFile": "files/rpr-003-packing-list.pdf",
-      "lineCount": 1,
-      "seededErrors": []
-    },
-    {
-      "id": "RPR-004",
-      "poNumber": "PO-7004",
-      "vendorName": "Beta Parts",
-      "arrivedAt": "2026-06-15T03:26:00.000Z",
-      "invoiceFile": "files/rpr-004-invoice.pdf",
-      "packingListFile": "files/rpr-004-packing-list.pdf",
-      "lineCount": 1,
       "seededErrors": [
         {
-          "code": "QTY_VARIANCE",
-          "field": "EF-9",
-          "detail": "invoiced 120, received 125"
+          "code": "INVOICE_PART_MISMATCH",
+          "field": "UPS-650B",
+          "detail": "invoice lists UPS-650B, the vendor PO has UPS-650"
         }
       ]
     },
     {
+      "id": "RPR-003",
+      "poNumber": "PO-7003",
+      "vendorName": "Pacific Components",
+      "arrivedAt": "2026-06-04T01:26:00.000Z",
+      "invoiceFile": "files/rpr-003-invoice.pdf",
+      "packingListFile": "files/rpr-003-packing-list.pdf",
+      "lineCount": 1,
+      "seededErrors": [
+        {
+          "code": "QTY_VARIANCE",
+          "field": "NAS-2B",
+          "detail": "invoiced 80, received 75"
+        }
+      ]
+    },
+    {
+      "id": "RPR-004",
+      "poNumber": "PO-7004",
+      "vendorName": "Delta Parts",
+      "arrivedAt": "2026-06-15T01:40:00.000Z",
+      "invoiceFile": "files/rpr-004-invoice.pdf",
+      "packingListFile": "files/rpr-004-packing-list.pdf",
+      "lineCount": 1,
+      "seededErrors": []
+    },
+    {
       "id": "RPR-005",
       "poNumber": "PO-7005",
-      "vendorName": "Beta Parts",
-      "arrivedAt": "2026-06-22T09:54:00.000Z",
+      "vendorName": "Nova Logistics",
+      "arrivedAt": "2026-06-22T06:05:00.000Z",
       "invoiceFile": "files/rpr-005-invoice.pdf",
       "packingListFile": "files/rpr-005-packing-list.pdf",
       "lineCount": 1,
@@ -1423,18 +1443,24 @@
     {
       "id": "RPR-006",
       "poNumber": "PO-7006",
-      "vendorName": "Alpha Supply",
-      "arrivedAt": "2026-06-30T05:29:00.000Z",
+      "vendorName": "Apex Industrial",
+      "arrivedAt": "2026-06-29T01:39:00.000Z",
       "invoiceFile": "files/rpr-006-invoice.pdf",
       "packingListFile": "files/rpr-006-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": []
+      "seededErrors": [
+        {
+          "code": "QTY_VARIANCE",
+          "field": "WC-1080",
+          "detail": "invoiced 140, received 139"
+        }
+      ]
     },
     {
       "id": "RPR-007",
       "poNumber": "PO-7007",
       "vendorName": "Apex Industrial",
-      "arrivedAt": "2026-07-06T01:37:00.000Z",
+      "arrivedAt": "2026-07-07T06:04:00.000Z",
       "invoiceFile": "files/rpr-007-invoice.pdf",
       "packingListFile": "files/rpr-007-packing-list.pdf",
       "lineCount": 1,
@@ -1443,18 +1469,24 @@
     {
       "id": "RPR-008",
       "poNumber": "PO-7008",
-      "vendorName": "Apex Industrial",
-      "arrivedAt": "2026-07-15T03:07:00.000Z",
+      "vendorName": "Beta Parts",
+      "arrivedAt": "2026-07-14T08:04:00.000Z",
       "invoiceFile": "files/rpr-008-invoice.pdf",
       "packingListFile": "files/rpr-008-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": []
+      "seededErrors": [
+        {
+          "code": "QTY_VARIANCE",
+          "field": "GH-310",
+          "detail": "invoiced 160, received 153"
+        }
+      ]
     },
     {
       "id": "RPR-009",
       "poNumber": "PO-7009",
-      "vendorName": "Pacific Components",
-      "arrivedAt": "2026-07-24T06:13:00.000Z",
+      "vendorName": "Delta Parts",
+      "arrivedAt": "2026-07-24T01:57:00.000Z",
       "invoiceFile": "files/rpr-009-invoice.pdf",
       "packingListFile": "files/rpr-009-packing-list.pdf",
       "lineCount": 1,
@@ -1463,18 +1495,24 @@
     {
       "id": "RPR-010",
       "poNumber": "PO-7010",
-      "vendorName": "Apex Industrial",
-      "arrivedAt": "2026-07-30T07:19:00.000Z",
+      "vendorName": "Beta Parts",
+      "arrivedAt": "2026-07-29T07:25:00.000Z",
       "invoiceFile": "files/rpr-010-invoice.pdf",
       "packingListFile": "files/rpr-010-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": []
+      "seededErrors": [
+        {
+          "code": "QTY_VARIANCE",
+          "field": "UPS-650",
+          "detail": "invoiced 50, received 52"
+        }
+      ]
     },
     {
       "id": "RPR-011",
       "poNumber": "PO-7011",
-      "vendorName": "Alpha Supply",
-      "arrivedAt": "2026-08-06T05:50:00.000Z",
+      "vendorName": "Nova Logistics",
+      "arrivedAt": "2026-08-06T05:30:00.000Z",
       "invoiceFile": "files/rpr-011-invoice.pdf",
       "packingListFile": "files/rpr-011-packing-list.pdf",
       "lineCount": 1,
@@ -1483,18 +1521,24 @@
     {
       "id": "RPR-012",
       "poNumber": "PO-7012",
-      "vendorName": "Apex Industrial",
-      "arrivedAt": "2026-08-17T06:32:00.000Z",
+      "vendorName": "Pacific Components",
+      "arrivedAt": "2026-08-17T08:27:00.000Z",
       "invoiceFile": "files/rpr-012-invoice.pdf",
       "packingListFile": "files/rpr-012-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": []
+      "seededErrors": [
+        {
+          "code": "QTY_VARIANCE",
+          "field": "RAM-16D4",
+          "detail": "invoiced 200, received 192"
+        }
+      ]
     },
     {
       "id": "RPR-013",
       "poNumber": "PO-7013",
-      "vendorName": "Pacific Components",
-      "arrivedAt": "2026-08-24T06:18:00.000Z",
+      "vendorName": "Delta Parts",
+      "arrivedAt": "2026-08-24T01:58:00.000Z",
       "invoiceFile": "files/rpr-013-invoice.pdf",
       "packingListFile": "files/rpr-013-packing-list.pdf",
       "lineCount": 1,
@@ -1503,40 +1547,28 @@
     {
       "id": "RPR-014",
       "poNumber": "PO-7014",
-      "vendorName": "Delta Parts",
-      "arrivedAt": "2026-09-01T01:05:00.000Z",
+      "vendorName": "Alpha Supply",
+      "arrivedAt": "2026-08-31T07:44:00.000Z",
       "invoiceFile": "files/rpr-014-invoice.pdf",
       "packingListFile": "files/rpr-014-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "INVOICE_PART_MISMATCH",
-          "field": "RT-AX55B",
-          "detail": "invoice lists RT-AX55B, the vendor PO has RT-AX55"
-        }
-      ]
+      "seededErrors": []
     },
     {
       "id": "RPR-015",
       "poNumber": "PO-7015",
-      "vendorName": "Apex Industrial",
-      "arrivedAt": "2026-09-09T01:44:00.000Z",
+      "vendorName": "Pacific Components",
+      "arrivedAt": "2026-09-07T09:20:00.000Z",
       "invoiceFile": "files/rpr-015-invoice.pdf",
       "packingListFile": "files/rpr-015-packing-list.pdf",
       "lineCount": 1,
-      "seededErrors": [
-        {
-          "code": "QTY_VARIANCE",
-          "field": "WC-1080",
-          "detail": "invoiced 150, received 143"
-        }
-      ]
+      "seededErrors": []
     },
     {
       "id": "RPR-016",
       "poNumber": "PO-7016",
-      "vendorName": "Delta Parts",
-      "arrivedAt": "2026-09-15T02:47:00.000Z",
+      "vendorName": "Pacific Components",
+      "arrivedAt": "2026-09-17T04:08:00.000Z",
       "invoiceFile": "files/rpr-016-invoice.pdf",
       "packingListFile": "files/rpr-016-packing-list.pdf",
       "lineCount": 1,
@@ -1545,8 +1577,8 @@
     {
       "id": "RPR-017",
       "poNumber": "PO-7017",
-      "vendorName": "Pacific Components",
-      "arrivedAt": "2026-09-23T09:31:00.000Z",
+      "vendorName": "Apex Industrial",
+      "arrivedAt": "2026-09-24T02:44:00.000Z",
       "invoiceFile": "files/rpr-017-invoice.pdf",
       "packingListFile": "files/rpr-017-packing-list.pdf",
       "lineCount": 1,
@@ -1555,24 +1587,24 @@
     {
       "id": "RPR-018",
       "poNumber": "PO-7018",
-      "vendorName": "Beta Parts",
-      "arrivedAt": "2026-10-05T04:13:00.000Z",
+      "vendorName": "Pacific Components",
+      "arrivedAt": "2026-10-05T02:01:00.000Z",
       "invoiceFile": "files/rpr-018-invoice.pdf",
       "packingListFile": "files/rpr-018-packing-list.pdf",
       "lineCount": 1,
       "seededErrors": [
         {
-          "code": "INVOICE_PART_MISMATCH",
-          "field": "GH-310B",
-          "detail": "invoice lists GH-310B, the vendor PO has GH-310"
+          "code": "QTY_VARIANCE",
+          "field": "RAM-16D4",
+          "detail": "invoiced 190, received 189"
         }
       ]
     },
     {
       "id": "RPR-019",
       "poNumber": "PO-7019",
-      "vendorName": "Nova Logistics",
-      "arrivedAt": "2026-10-09T05:30:00.000Z",
+      "vendorName": "Delta Parts",
+      "arrivedAt": "2026-10-12T06:49:00.000Z",
       "invoiceFile": "files/rpr-019-invoice.pdf",
       "packingListFile": "files/rpr-019-packing-list.pdf",
       "lineCount": 1,
@@ -1581,16 +1613,16 @@
     {
       "id": "RPR-020",
       "poNumber": "PO-7020",
-      "vendorName": "Pacific Components",
-      "arrivedAt": "2026-10-19T08:27:00.000Z",
+      "vendorName": "Apex Industrial",
+      "arrivedAt": "2026-10-19T05:15:00.000Z",
       "invoiceFile": "files/rpr-020-invoice.pdf",
       "packingListFile": "files/rpr-020-packing-list.pdf",
       "lineCount": 1,
       "seededErrors": [
         {
           "code": "QTY_VARIANCE",
-          "field": "RAM-16D4",
-          "detail": "invoiced 200, received 192"
+          "field": "WC-1080",
+          "detail": "invoiced 180, received 177"
         }
       ]
     }

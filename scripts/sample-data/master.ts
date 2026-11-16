@@ -37,7 +37,8 @@ export const ITEMS: NavItem[] = [
   { itemNo: "MS-M185", description: "Wireless mouse", vendorId: "V004", price: "9.60", purchasePrice: "6.85", currency: "USD", stockQty: 1200 },
   { itemNo: "TB-240", description: "Thunderbolt cable 0.8 m", vendorId: "V001", price: "22.30", purchasePrice: "17.10", currency: "USD", stockQty: 150 },
   { itemNo: "NAS-2B", description: "2-bay NAS enclosure", vendorId: "V003", price: "182.00", purchasePrice: "151.00", currency: "USD", stockQty: 12 },
-  { itemNo: "RAM-16D4", description: "16 GB DDR4 memory module", vendorId: "V003", price: "41.80", purchasePrice: "34.20", currency: "USD", stockQty: 95 },
+  // Stock is 0 because the 95 that were on hand went out with ORD-1037 (partial fulfilment); 25 are still owed.
+  { itemNo: "RAM-16D4", description: "16 GB DDR4 memory module", vendorId: "V003", price: "41.80", purchasePrice: "34.20", currency: "USD", stockQty: 0 },
   { itemNo: "PSU-550B", description: "550 W power supply", vendorId: "V005", price: "52.40", purchasePrice: "43.00", currency: "USD", stockQty: 66 },
   { itemNo: "FD-64U3", description: "64 GB USB flash drive", vendorId: "V006", price: "6.45", purchasePrice: "4.30", currency: "USD", stockQty: 2000 },
   { itemNo: "PRJ-X20", description: "Portable projector", vendorId: "V002", price: "268.00", purchasePrice: "229.00", currency: "USD", stockQty: 9 },

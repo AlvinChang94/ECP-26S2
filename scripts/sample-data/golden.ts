@@ -260,7 +260,7 @@ export async function buildGoldenDataset(): Promise<GoldenDataset> {
   await poCase(
     "po-missing-price",
     "PO where one line has no unit price",
-    po({ layout: "B", customer: "Beacon Devices", poNumber: "BD-PO-5511", lines: [itemLine("RAM-16D4", 20), itemLine("PSU-550B", 5, { unitPrice: null })] }),
+    po({ layout: "B", customer: "Beacon Devices", poNumber: "BD-PO-5511", lines: [itemLine("KM-2210", 20), itemLine("PSU-550B", 5, { unitPrice: null })] }),
     [{ code: "MISSING_FIELD", field: "lines[1].unitPrice" }],
   );
   await poCase(

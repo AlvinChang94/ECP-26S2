@@ -15,6 +15,9 @@ const EnvSchema = z.object({
   ANTHROPIC_API_KEY: z.string().optional(),
   LLM_MODEL: z.string().default("claude-opus-5-5"),
   SHOW_MARGIN: z.enum(["true", "false"]).default("false"),
+  // Alert windows. Whole numbers written as text, for example "48".
+  DOCUMENT_ALERT_WINDOW_HOURS: z.coerce.number().int().min(1).max(720).default(48),
+  SHIP_DATE_ALERT_DAYS: z.coerce.number().int().min(0).max(60).default(2),
 });
 
 export type AppConfig = {
@@ -65,6 +68,8 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     ANTHROPIC_API_KEY: env.ANTHROPIC_API_KEY || undefined,
     LLM_MODEL: env.LLM_MODEL || undefined,
     SHOW_MARGIN: env.SHOW_MARGIN || undefined,
+    DOCUMENT_ALERT_WINDOW_HOURS: env.DOCUMENT_ALERT_WINDOW_HOURS || undefined,
+    SHIP_DATE_ALERT_DAYS: env.SHIP_DATE_ALERT_DAYS || undefined,
   });
   return {
     databaseUrl: resolveDatabaseUrl(rootDir, parsed.DATABASE_URL),
@@ -78,10 +83,10 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     llmModel: parsed.LLM_MODEL,
     showMargin: parsed.SHOW_MARGIN === "true",
     approvalLinkTtlHours: 48,
-    documentAlertWindowHours: 48,
+    documentAlertWindowHours: parsed.DOCUMENT_ALERT_WINDOW_HOURS,
     vendorPaymentReminderDays: [3, 1],
     latePaymentAfterDays: 7,
-    shipDateAlertDays: 2,
+    shipDateAlertDays: parsed.SHIP_DATE_ALERT_DAYS,
     suggestedShipLeadDays: 7,
   };
 }

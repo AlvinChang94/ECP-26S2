@@ -12,6 +12,7 @@ import { getDocument, workingType } from "./documents";
 import { requireThat, UserError } from "./errors";
 import { attachPoDocument, detachPoDocument } from "./orders";
 import { detachProof, registerProof } from "./payments";
+import { attachShipmentDocument, detachShipmentDocument } from "./shipments";
 
 const MAX_PDF_BYTES = 15 * 1024 * 1024;
 
@@ -154,7 +155,7 @@ type Router = {
 /** Document types whose workflow is not built yet are filed: stored, shown, and nothing else. */
 const FILE_ONLY: Router = { attach: async () => ({ routedId: null, path: null }), detach: async () => undefined };
 
-/** One router per destination. The shipment router is added by story 5. */
+/** One router per destination. */
 const ROUTERS: Record<RouteKind, Router> = {
   order: {
     attach: async (deps, actor, document) => {
@@ -170,7 +171,14 @@ const ROUTERS: Record<RouteKind, Router> = {
     },
     detach: detachProof,
   },
-  shipment: FILE_ONLY,
+  shipment: {
+    attach: async (deps, actor, document) => {
+      // A reference that matches no vendor PO or order is not guessed at: the document waits on the Shipments page.
+      const { shipmentNo } = await attachShipmentDocument(deps, actor, document);
+      return { routedId: shipmentNo, path: shipmentNo ? `/shipments/${shipmentNo}` : "/shipments" };
+    },
+    detach: detachShipmentDocument,
+  },
   filed: FILE_ONLY,
 };
 

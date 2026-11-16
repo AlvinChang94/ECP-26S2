@@ -220,23 +220,37 @@ export function buildVendorPaymentDue(
 
 // ------------------------------------------------------------------ story 5: shipments
 
+/** "AWB or BL", "AWB or BL and Import permit", "Invoice, Packing list and Import permit". */
+function listInWords(labels: string[]): string {
+  if (labels.length <= 1) return labels[0] ?? "";
+  return `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+}
+
+/** One alert per shipment and stage (due soon, overdue) that names every required document still missing. */
 export function buildDocumentDueAlert(
   owner: Recipient,
-  data: { shipmentNo: string; reference: string; partyName: string; documentLabel: string; dueAt: Date; overdue: boolean; orderNo: string | null },
+  data: { shipmentNo: string; reference: string; partyName: string; documentLabels: string[]; dueAt: Date; overdue: boolean; orderNo: string | null },
 ): OutgoingMessage {
+  const documents = listInWords(data.documentLabels);
+  const plural = data.documentLabels.length > 1;
   return {
     type: "document_due_alert",
     channel: "email",
     ...to(owner),
-    subject: `${data.documentLabel} ${data.overdue ? "overdue" : "due soon"} for ${data.reference} (${data.partyName})`,
+    subject: `${documents} ${data.overdue ? "overdue" : "due soon"} for ${data.reference} (${data.partyName})`,
     body:
-      `${data.documentLabel} is still missing for ${data.reference} (${data.partyName}, shipment ${data.shipmentNo}).\n` +
-      `It ${data.overdue ? "was" : "is"} due on ${formatDateTime(data.dueAt)}.\n` +
-      `Please request the document and record the outcome on the shipment page.`,
+      `${documents} ${plural ? "are" : "is"} still missing for ${data.reference} (${data.partyName}, shipment ${data.shipmentNo}` +
+      (data.orderNo ? `, for order ${data.orderNo}` : "") +
+      `).
+` +
+      `${plural ? "They" : "It"} ${data.overdue ? (plural ? "were" : "was") : plural ? "are" : "is"} due on ${formatDateTime(data.dueAt)}.
+` +
+      `Please request ${plural ? "the documents" : "the document"} and record the outcome on the shipment page.`,
     entityType: "shipment",
     entityId: data.shipmentNo,
     orderNo: data.orderNo,
-    dedupeKey: `doc-due:${data.shipmentNo}:${data.documentLabel}:${data.overdue ? "overdue" : "soon"}`,
+    // The due date is part of the key: if the due date moves, the alert for the new date is written again.
+    dedupeKey: `doc-due:${data.shipmentNo}:${data.dueAt.toISOString()}:${data.overdue ? "overdue" : "soon"}`,
   };
 }
 

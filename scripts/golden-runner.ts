@@ -5,14 +5,16 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { DocumentExtractor } from "../src/adapters/extractor/types";
 import { FileNavisionGateway } from "../src/adapters/navision/fileGateway";
-import { isDocumentType } from "../src/domain/documents";
+import { type DocumentType, isDocumentType } from "../src/domain/documents";
 import { extractedValues, type FieldValues } from "../src/domain/fields";
 import type { Flag, Severity } from "../src/domain/flags";
 import { matchProof, toProofData } from "../src/domain/payment/matching";
 import { checkCustomerPo } from "../src/domain/po/checks";
 import { aliasKey, sameCompany } from "../src/domain/po/partMatch";
 import { toCustomerPo } from "../src/domain/po/types";
+import { assessShipment } from "../src/domain/shipment/assess";
 import { lookupPoLines } from "../src/services/poReview";
+import { readInboundFacts } from "../src/services/shipments";
 import { type ExpectedFlag, type GoldenCase, GoldenCasesFileSchema, type GoldenContext, GoldenContextSchema } from "./sample-data/goldenTypes";
 
 export type ActualFlag = { code: string; field: string; severity: Severity };
@@ -50,6 +52,9 @@ export type GoldenReport = {
 
 type ReadDocument = { expectedType: string; detectedType: string; values: FieldValues };
 
+/** The alert window the golden cases were written for (the app's default, DOCUMENT_ALERT_WINDOW_HOURS). */
+const GOLDEN_ALERT_WINDOW_HOURS = 48;
+
 /** Runs the rules that belong to the kind of case. Returns null when those rules do not exist yet. */
 async function validateCase(
   goldenCase: GoldenCase,
@@ -82,7 +87,23 @@ async function validateCase(
     return matchProof(toProofData(documents[0].values), context.openInvoices, context.priorProofs).flags;
   }
 
-  // Shipment checks arrive with story 5.
+  if (goldenCase.kind === "shipment" && goldenCase.shipment) {
+    // Ordered and received quantities and the due date come from the golden Navision files, as they do in the app.
+    const facts = await readInboundFacts(navision, goldenCase.shipment.reference);
+    const confirmed = documents.filter((document) => isDocumentType(document.detectedType));
+    return assessShipment({
+      direction: goldenCase.shipment.direction,
+      reference: goldenCase.shipment.reference,
+      ordered: facts.ordered,
+      documents: confirmed.map((document) => ({ type: document.detectedType as DocumentType, values: document.values })),
+      pendingTypes: [],
+      received: facts.received,
+      dueAt: facts.dueAt,
+      now: new Date(context.now),
+      alertWindowHours: GOLDEN_ALERT_WINDOW_HOURS,
+    }).flags;
+  }
+
   return null;
 }
 

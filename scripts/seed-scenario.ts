@@ -8,18 +8,20 @@ import type { Actor } from "../src/domain/audit";
 import { setLastUsedNumber } from "../src/services/counters";
 import type { Deps } from "../src/services/deps";
 import { recordDelivery } from "../src/services/fulfilment";
-import { confirmDocumentType, ingestDocument } from "../src/services/intake";
+import { confirmDocumentType, ingestDocument, parseDocumentType } from "../src/services/intake";
 import { runDueJobs } from "../src/services/jobs";
 import { confirmPaid } from "../src/services/payments";
 import { editField } from "../src/services/poEdit";
+import { assignShipment, trackShipment } from "../src/services/shipments";
 import { approveAndExport, approveCancellation, buildCancellationPreview, buildExportPreview } from "../src/services/poExport";
 import { createSpr, decideSpr, latestApprovalTokenFromOutbox, submitSpr } from "../src/services/spr";
 import { customerByName, DEMO_NOW } from "./sample-data/master";
-import { SCENARIO_ORDERS, SCENARIO_PROOFS, scenarioOrder } from "./sample-data/scenario";
+import { SCENARIO_ORDERS, SCENARIO_PROOFS, SCENARIO_SHIPMENT_DOCS, scenarioOrder } from "./sample-data/scenario";
 
 const SAM: Actor = { name: "Sam Tan", role: "sales" };
 const PRIYA: Actor = { name: "Priya Nair", role: "product_manager" };
 const FARAH: Actor = { name: "Farah Lim", role: "finance" };
+const PETER: Actor = { name: "Peter Goh", role: "purchase" };
 
 /** One thing that happened in the demo's past, at a simulated time. */
 type Step = { at: Date; label: string; run: () => Promise<void> };
@@ -170,6 +172,42 @@ function buildSteps(deps: Deps, seedDir: string): Step[] {
 
   // SPR-0005: a draft that was never submitted.
   steps.push({ at: before(2), label: "SPR-0005: Priya saves a draft for NAS-2B", run: () => raise("SPR-0005", "NAS-2B", 6, "Open orders need 18 NAS enclosures and 12 are in stock.", null, false) });
+
+  // ---- Story 5: shipping documents arrive. Vendor documents are confirmed by Peter (purchase), outgoing ones by Sam (sales).
+  for (const entry of SCENARIO_SHIPMENT_DOCS) {
+    const actor = entry.reference.startsWith("PO-") ? PETER : SAM;
+    steps.push({
+      at: before(entry.arrivedHoursAgo),
+      label: `${entry.reference}: ${entry.file} arrives by ${entry.channel}`,
+      run: async () => {
+        const result = await ingestDocument(deps, actor, { bytes: read(entry.file), fileName: entry.file, channel: entry.channel, sender: entry.sender });
+        documentIds.set(entry.file, result.documentId);
+      },
+    });
+    // A document left unconfirmed shows as "Pending check" on its shipment until someone confirms it in the Inbox.
+    if (!entry.confirm) continue;
+    steps.push({
+      at: before(entry.arrivedHoursAgo, 15),
+      label: `${entry.reference}: ${actor.name} confirms the type of ${entry.file}`,
+      run: async () => {
+        const documentId = documentIds.get(entry.file) as string;
+        const document = await deps.db.document.findUniqueOrThrow({ where: { id: documentId } });
+        const route = await confirmDocumentType(deps, actor, documentId, parseDocumentType(document.detectedType));
+        if (route.kind !== "shipment" || !route.routedId) throw new Error(`Seed expected ${entry.file} to join a shipment for ${entry.reference}`);
+      },
+    });
+  }
+  // PO-8345: nothing has arrived yet. Peter tracks it by hand so its documents are watched against the due date.
+  steps.push({ at: before(4), label: "PO-8345: Peter starts tracking the shipment before any document arrives", run: async () => void (await trackShipment(deps, PETER, "PO-8345")) });
+  // PO-8341 (for ORD-1042): Sam asks Peter to chase the vendor. This is the demo's blocked order.
+  steps.push({
+    at: before(3),
+    label: "PO-8341: Sam assigns the shipment to Peter",
+    run: async () => {
+      const shipment = await deps.db.shipment.findFirstOrThrow({ where: { reference: "PO-8341" } });
+      await assignShipment(deps, SAM, { shipmentNo: shipment.shipmentNo, staffId: "peter" });
+    },
+  });
 
   // ---- The regular job run shortly before the demo starts: vendor payment reminders, drafts for late payers, due-date alerts.
   steps.push({ at: before(0, -5), label: "Due jobs run before the demo starts", run: async () => void (await runDueJobs(deps)) });

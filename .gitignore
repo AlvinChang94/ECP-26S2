@@ -1,9 +1,6 @@
-<<<<<<< HEAD
+# editor and assistant settings
 .claude/
 .vscode/
-=======
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
->>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791
 
 # dependencies
 /node_modules
@@ -12,12 +9,13 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+/blob-report/
 
 # next.js
 /.next/
 /out/
-
-# production
 /build
 
 # misc
@@ -32,23 +30,24 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
-<<<<<<< HEAD
 !.env.example
-=======
->>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791
-
-# vercel
-.vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-<<<<<<< HEAD
 
-# prisma generated client
+# prisma generated client (re-created by `npm install`)
 /src/generated/
 
-# generated exports (Excel files)
+# pdf.js worker copied from node_modules by `npm install`
+/public/pdf.worker.min.mjs
+
+# runtime state: SQLite database and uploaded PDFs (re-created by `npm run seed`)
 /storage/
-=======
->>>>>>> 053d0cabdba95b5f48c7047af739cf25eff66791
+
+# files the app writes for "Navision" (re-created by approving exports)
+/data/navision/export/*
+!/data/navision/export/.gitkeep
+
+# KPI replay output
+/reports/

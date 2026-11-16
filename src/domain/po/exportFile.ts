@@ -2,6 +2,7 @@
 // Who calls it: the export service (preview and approval) and the NavisionGateway (which checks the approved hash).
 // To extend: add a property to SalesOrderExport and set it in buildSalesOrderExport; the preview shows it automatically.
 import Decimal from "decimal.js";
+import { z } from "zod";
 import { formatMoney, lineTotal, parseMoney, parseQuantity, sumMoney } from "../money";
 import type { NavCustomer, NavItem } from "../navision";
 import { parseDateText } from "../time";
@@ -44,6 +45,42 @@ export type CustomerCardExport = {
   currency: string;
   requestedForOrder: string;
 };
+
+/** Checks a stored sales order file when it is read back (for the PI, payments, fulfilment and cancellations). */
+export const SalesOrderExportSchema: z.ZodType<SalesOrderExport> = z.object({
+  schema: z.literal("orderflow.salesOrder.v1"),
+  orderNo: z.string(),
+  revision: z.number().int(),
+  status: z.enum(["open", "cancelled"]),
+  customer: z.object({ customerNo: z.string().nullable(), name: z.string(), newCustomerCardFile: z.string().nullable() }),
+  customerPoNumber: z.string(),
+  orderDate: z.string().nullable(),
+  promisedShipDate: z.string().nullable(),
+  currency: z.string(),
+  paymentTerms: z.enum(["advance", "credit"]),
+  lines: z.array(
+    z.object({
+      lineNo: z.number().int(),
+      itemNo: z.string(),
+      description: z.string(),
+      quantity: z.number().int(),
+      unitPrice: z.string(),
+      lineTotal: z.string(),
+    }),
+  ),
+  totalAmount: z.string(),
+  acceptedDifferences: z.array(z.object({ flag: z.string(), field: z.string(), reason: z.string(), acceptedBy: z.string() })),
+  source: z.object({ fileName: z.string(), sha256: z.string() }),
+});
+
+export function parseSalesOrderExport(text: string): SalesOrderExport {
+  return SalesOrderExportSchema.parse(JSON.parse(text));
+}
+
+/** The PI number that belongs to an order: ORD-1042 -> PI-1042. */
+export function piNumberFor(orderNo: string): string {
+  return orderNo.replace(/^ORD-/, "PI-");
+}
 
 /** The one way export files are turned into text. Preview, hash and the written file all use it. */
 export function serializeExportFile(file: SalesOrderExport | CustomerCardExport): string {

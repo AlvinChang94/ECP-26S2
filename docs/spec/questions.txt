@@ -1,0 +1,23 @@
+What triggers an SPR: a shortage on a customer order, restocking, or both?
+Spectra only sells what they have on inventory, 'recommend' feature is a novelty
+Auto pre-fill feature is only expected to work with part no only (auto fills price and vendor)
+
+-What is the intended way for documents (Customer PO, PI, Vendor PIs, proof of payment, Packing list, AWB & BL, Navision exports for stock, items & vendors) to reach our built system? aside from email, messaging apps, manually input spreadsheets, Navision
+PDF file formats only, only from Navision, emails and WhatsApp
+
+-How do you learn a customer has paid?
+Typically via WhatsApp/Emails
+
+-For the Comprehensive Visual Dashboard, would you prefer if Power BI was used? and if so, would you like it to be a real-time live dashboard or snapshots of the data?
+Yes, both are good (idt necessary)
+
+to consider: 
+-Sometimes there are part number mismatches/price mismatches between customer and Spectra's PI/POs; if our solution produced a mismatch, how should our solution handle it?
+
+additional notes:
+-Solution should also handle cancelling sales/purchases/partial fulfilments where necessary (essentially editing/deleting entries)
+-Solution Audience: Sales team, purchase team, finance
+-Past 6 months sample data can be provided
+-Spectra has differential pricing, case-to-case basis
+-For auto-filling SPR, use Navision to check  item number, price, quantity, vendor and customer name only, (solution has to create a new 'customer card' if customer is not found (in Navision?); idk what customer card means)
+

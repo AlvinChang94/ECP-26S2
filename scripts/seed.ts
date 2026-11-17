@@ -19,6 +19,17 @@ async function main(): Promise<void> {
     // no .env file: fine
   }
   const config = loadConfig();
+  // The schema is SQLite. A DATABASE_URL set in the terminal wins over .env, so say clearly where a wrong one comes from.
+  if (!config.databaseUrl.startsWith("file:")) {
+    console.error(
+      `DATABASE_URL is "${config.databaseUrl.replace(/\/\/[^@]*@/, "//***@")}", but this app uses a SQLite file (it must start with "file:").\n` +
+        "A value set in your terminal overrides .env. Clear it and try again:\n" +
+        "  Command Prompt:  set DATABASE_URL=\n" +
+        "  PowerShell:      Remove-Item Env:DATABASE_URL\n" +
+        "  Git Bash:        unset DATABASE_URL",
+    );
+    process.exit(1);
+  }
   const dataDir = path.resolve(process.cwd(), "data");
   const regenerate = process.argv.includes("--regenerate-data") || !existsSync(path.join(config.navisionDir, "items.json"));
 

@@ -1,6 +1,6 @@
 # Feature map
 
-One row per acceptance criterion from the deck. "Rule" is the pure function in `src/domain` that decides; "Test" is where it is checked. Rows are filled in as each milestone lands.
+One row per acceptance criterion from the deck. "Rule" is the pure function in `src/domain` that decides; "Test" is where it is checked. Every criterion is implemented; each also has a happy-path and a failure-path end-to-end test in `tests/e2e/story-<n>-*.spec.ts` and a hand check in [MANUAL_TEST.md](MANUAL_TEST.md).
 
 | # | Story | Acceptance criterion | Screen and route | Rule (src/domain) | Test | How to demo | Status |
 |---|---|---|---|---|---|---|---|
@@ -60,6 +60,23 @@ One row per acceptance criterion from the deck. "Rule" is the pure function in `
 | Summary tiles computed from the data | Dashboard tiles: open, blocked, ship date at risk, awaiting payment | `src/domain/order/status.test.ts` (summarizeOrders), `tests/integration/orderDashboard.test.ts` | Confirm a payment as Farah: "Awaiting payment" drops by one |
 | Ship-date alert before the promised date | Outbox (type "Ship-date alert"), sent by `shipDateAlertSweep` in `runDueJobs`; window = `SHIP_DATE_ALERT_DAYS` (2) | `tests/integration/orderDashboard.test.ts` (ship-date alerts) | Outbox: "ORD-1042 may miss its promised ship date (18 Nov 2026)", sent to Peter Goh |
 
+## KPI replay and end-to-end tests (milestone M7)
+
+| Piece | Where | Test | How to demo |
+|---|---|---|---|
+| KPI replay: order-processing time, error rate, approval turnaround, overdue orders against the sample's baseline | `npm run replay`, `scripts/replay-runner.ts`, report in `reports/kpi-replay.txt` | `tests/integration/replay.test.ts`, `src/domain/kpi.test.ts` | Step 9 of [DEMO_SCRIPT.md](DEMO_SCRIPT.md) |
+| Seeded demo scenario: ORD-1042 invoiced 100, received 95, AWB missing, blocked with owner and next action | `scripts/seed-scenario.ts` | `tests/integration/orderDashboard.test.ts` (seeded block) | [DEMO_SCRIPT.md](DEMO_SCRIPT.md) |
+| End-to-end tests: one happy path and one failure path per story | `tests/e2e`, `playwright.config.ts`, `npm run test:e2e` | 12 tests | [TESTING.md](TESTING.md) |
+
+## Not built (STUB or out of scope)
+
+| What | Why | Where it shows |
+|---|---|---|
+| Vendor PO created after an approved SPR | Not in any acceptance criterion; the deck's "automatically generated" conflicts with design principle 3 (DECISIONS, first table) | "STUB" note on an approved SPR's page |
+| Proforma invoices and vendor POs as incoming documents | Recognised, read and filed; no workflow uses them yet | Document page, route "filed" |
+| Real Navision, email, WhatsApp, AWS | The POC uses files, the Outbox and folders behind interfaces | [NAVISION_ADAPTER.md](NAVISION_ADAPTER.md), [AWS_MAPPING.md](AWS_MAPPING.md) |
+| LLM extractor and rewording against the real API | Built and tested with a fake model; not run against the API in this build | [MANUAL_TEST.md](MANUAL_TEST.md) row M5 |
+
 ## Foundation (milestone M0)
 
 | Piece | Where | Test |
@@ -69,5 +86,5 @@ One row per acceptance criterion from the deck. "Rule" is the pure function in `
 | Outbox (Notifier) | `src/adapters/notifier.ts`, page `/outbox` | `tests/integration/foundation.test.ts` |
 | Mock Navision | `src/adapters/navision/`, page `/navision` | `tests/integration/fileNavisionGateway.test.ts` |
 | Sample data and golden dataset | `scripts/sample-data/`, `data/` | `tests/integration/sampleData.test.ts` |
-| Persona picker | `/sign-in`, `src/app/_lib/session.ts` | end-to-end tests (M7) |
+| Persona picker | `/sign-in`, `src/app/_lib/session.ts` | every test in `tests/e2e` signs in through it |
 | Audit log | `src/services/audit.ts`, page `/audit` | `tests/integration/foundation.test.ts` |

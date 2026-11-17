@@ -51,3 +51,6 @@ next-env.d.ts
 
 # KPI replay output
 /reports/
+
+# private copy of the sample data and database used by the end-to-end tests
+/.e2e/

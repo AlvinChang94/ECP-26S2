@@ -29,8 +29,8 @@ Open http://localhost:3000 and pick a persona. The simulated time starts at Mond
 | `npm run lint` | Checks code style |
 | `npm test` | Unit, integration, invariant and golden tests (Vitest) |
 | `npm run test:golden` | Runs every golden case and prints a pass/fail table with accuracy figures |
-| `npm run test:e2e` | End-to-end tests in a real browser (Playwright). First time: `npx playwright install chromium` |
-| `npm run replay` | Replays six months of synthetic orders and prints the four KPIs |
+| `npm run test:e2e` | End-to-end tests in a real browser (Playwright), on a private copy of the data in `.e2e` and port 3217. First time: `npx playwright install chromium` |
+| `npm run replay` | Replays six months of synthetic orders with simulated staff and prints the four KPIs (saved to `reports/kpi-replay.txt`) |
 
 ## Where to read next
 
@@ -47,6 +47,27 @@ Open http://localhost:3000 and pick a persona. The simulated time starts at Mond
 | [data/README.md](data/README.md) | What the sample data is and how to swap in Spectra's real data |
 | [CLAUDE.md](CLAUDE.md) | The standing rules of the project |
 
-## Status
+## What it does
 
-See [PLAN.md](PLAN.md) for the milestones and the end of this file's history for what is done. The source of truth for what the solution should do is the team's deck in `docs/spec/`.
+Six user stories from the team's deck, each working end to end against a file-based stand-in for Navision:
+
+| Story | Screen | In one line |
+|---|---|---|
+| 1 Capture and check a PO | Inbox and upload, PO review | A PDF from the (simulated) email or WhatsApp inbox is classified and read; every value is shown on the PDF and checked against Navision. |
+| 2 Review and remember | PO review, preview, alias memory | Fix or accept each finding (with a reason), undo any change, remember part-number corrections, approve a preview of exactly what is written to Navision, download the PI. |
+| 3 SPR from a part number | SPRs, approval link | Vendor and price come from Navision; Janet approves from a signed link without logging in; reminders at 24 and 48 hours, her stand-in at 72. |
+| 4 Payment tracking | Payments | Proofs of payment are matched to PIs; only Finance confirms Paid; the warehouse is then notified; reminders for late payers and vendor payments. |
+| 5 Receipts and shipment documents | Receipts and shipments | Invoice, packing list and received quantities compared per part; AWB or BL, permit, packing list and invoice checked against the due date, with alerts; resolutions recorded with a name. |
+| 6 Order dashboard | Order dashboard, order page | Status, owner, next action, delay reason and ship-date risk per order, all derived from stories 1 to 5; search, timeline, a customer-ready update. |
+
+Start with ORD-1042 on the dashboard: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) walks through it.
+
+## Test results
+
+Last full run (17 November 2026): typecheck and lint clean; `npm test` 575 of 575 passed; `npm run test:golden` 44 of 44 cases; `npm run test:e2e` 12 of 12; `npm run replay` flagged 36 of 36 seeded errors. Details and what each layer proves: [docs/TESTING.md](docs/TESTING.md).
+
+## Not built
+
+The vendor PO after an approved SPR is a labelled STUB. Real Navision, email, WhatsApp and AWS are replaced by local stand-ins behind interfaces. The optional LLM reader is tested with a fake model only. See the end of [docs/FEATURE_MAP.md](docs/FEATURE_MAP.md).
+
+The source of truth for what the solution should do is the team's deck in `docs/spec/`. Where the build differs from it, [docs/DECISIONS.md](docs/DECISIONS.md) says how and why.

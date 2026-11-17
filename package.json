@@ -19,6 +19,7 @@
     "test": "vitest run",
     "test:golden": "tsx scripts/run-golden.ts",
     "test:e2e": "playwright test",
+    "e2e:server": "tsx scripts/e2e-prepare.ts && tsx scripts/seed.ts && next build && next start -p 3217",
     "replay": "tsx scripts/replay.ts"
   },
   "dependencies": {

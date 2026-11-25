@@ -2,6 +2,7 @@
 # What: brings the running server up to the latest commit of its branch: fetch, install, apply new database migrations, build, restart.
 # Who calls it: the deploy job in .github/workflows/ci.yml (through Systems Manager Run Command), or a person in a Session Manager shell.
 # To extend: never seed here. The seed empties the tables; it runs once, on first boot (infra/ec2/setup.sh).
+#            Settings in /etc/orderflow/stack.env (APP_PORT, APP_BASE_URL) are applied again on every run.
 set -euo pipefail
 
 APP_DIR=/opt/orderflow/app
@@ -16,6 +17,12 @@ as_app "npm ci"
 # Prisma reads DATABASE_URL from the environment; load it from .env for this one command.
 as_app "set -a && source .env && set +a && npx prisma migrate deploy --config prisma.mysql.config.ts"
 as_app "npm run build"
-install -m 755 "$APP_DIR/infra/ec2/run-jobs.sh" /usr/local/bin/orderflow-run-jobs
+# The app's public address goes into approval links, so keep it in step with stack.env.
+sed -i "s#^APP_BASE_URL=.*#APP_BASE_URL=\"$APP_BASE_URL\"#" "$APP_DIR/.env"
+# shellcheck disable=SC1091
+source "$APP_DIR/infra/ec2/service.sh"
+write_service
+install_helpers
 systemctl restart orderflow
+wait_for_app || { echo "OrderFlow did not answer on port $APP_PORT. See: journalctl -u orderflow" >&2; exit 1; }
 echo "== $(date -u +%FT%TZ) done: $(as_app 'git log -1 --format=%h\ %s')"

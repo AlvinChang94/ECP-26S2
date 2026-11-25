@@ -55,7 +55,7 @@ When it is done:
 aws cloudformation describe-stacks --region ap-southeast-1 --stack-name orderflow --query "Stacks[0].Outputs" --output table
 ```
 
-Open `AppUrl` (for example `http://54.x.x.x:3000`).
+Open `AppUrl` (for example `http://54.x.x.x`). The app is served on the normal web port, 80, because many school and office networks block port 3000.
 
 ## Try stories 3 and 4 on AWS
 

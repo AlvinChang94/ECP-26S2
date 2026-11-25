@@ -1,6 +1,6 @@
 // What: the Notifier interface and the POC implementation that writes every message to the Outbox table.
-// Who calls it: services, whenever something must be sent (approval links, reminders, warehouse notices).
-// To extend: write an SesSnsNotifier with the same method (docs/AWS_MAPPING.md). Keep writing the Outbox row for the audit trail.
+// Who calls it: services, whenever something must be sent (approval links, reminders, warehouse notices); sendDraft() when a person sends a draft.
+// To extend: SesNotifier (sesNotifier.ts) extends this class and also emails each sent message. Every message keeps its Outbox row for the audit trail.
 import type { OutgoingMessage } from "@/domain/notifications";
 import type { Clock } from "./clock";
 import type { Db } from "./db";
@@ -13,12 +13,17 @@ export type SendResult = {
 
 export interface Notifier {
   send(message: OutgoingMessage): Promise<SendResult>;
+  /**
+   * Delivers an Outbox row that is now "sent": called by send() for messages that go out at once,
+   * and by sendDraft() after a person reviewed a draft and clicked Send.
+   */
+  deliver(messageId: number): Promise<void>;
 }
 
 export class OutboxNotifier implements Notifier {
   constructor(
-    private readonly db: Db,
-    private readonly clock: Clock,
+    protected readonly db: Db,
+    protected readonly clock: Clock,
   ) {}
 
   async send(message: OutgoingMessage): Promise<SendResult> {
@@ -38,7 +43,6 @@ export class OutboxNotifier implements Notifier {
         subject: message.subject,
         body: message.body,
         status,
-        // "sent" in the POC means "written to the Outbox". No email or chat message leaves this machine.
         sentAt: status === "sent" ? now : null,
         entityType: message.entityType ?? null,
         entityId: message.entityId ?? null,
@@ -46,6 +50,12 @@ export class OutboxNotifier implements Notifier {
         dedupeKey: message.dedupeKey ?? null,
       },
     });
+    // A draft waits for a person; everything else goes out now.
+    if (status === "sent") await this.deliver(row.id);
     return { id: row.id, duplicate: false };
   }
+
+  /** Locally "sent" means "written to the Outbox": nothing leaves this machine. SesNotifier overrides this to email the row. */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- the id is used by subclasses such as SesNotifier
+  async deliver(messageId: number): Promise<void> {}
 }

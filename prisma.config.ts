@@ -1,6 +1,6 @@
 // What: tells the Prisma command-line tool where the schema, the migrations and the database are.
 // Who calls it: `prisma generate`, `prisma migrate ...` (Prisma 7 no longer reads .env by itself).
-// To extend: for MySQL only DATABASE_URL changes here; see docs/DEVELOPER_GUIDE.md "move from SQLite to MySQL".
+// To extend: MySQL (Amazon RDS) has its own config, prisma.mysql.config.ts; see docs/DEVELOPER_GUIDE.md recipe 3.9.
 import path from "node:path";
 import { defineConfig } from "prisma/config";
 

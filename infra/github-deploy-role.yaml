@@ -1,0 +1,86 @@
+# What: lets GitHub Actions deploy OrderFlow with a short-lived role (OpenID Connect) instead of AWS keys stored in GitHub.
+# Who calls it: a person, once per AWS account (docs/AWS_DEPLOY.md "Continuous deployment"). The deploy job in .github/workflows/ci.yml then assumes the role.
+# To extend: if the stack gains a new kind of resource, the role may need a matching permission (PowerUserAccess covers most services).
+AWSTemplateFormatVersion: "2010-09-09"
+Description: GitHub Actions deploy role for the Spectra OrderFlow proof of concept
+
+Parameters:
+  GitHubRepository:
+    Type: String
+    Default: AlvinChang94/ECP-26S2
+    Description: owner/name of the repository allowed to deploy
+  AppStackName:
+    Type: String
+    Default: orderflow
+    Description: The stack the role may manage (the --stack-name used for infra/orderflow.yaml)
+  CreateOidcProvider:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+    Description: '"false" if this AWS account already has the token.actions.githubusercontent.com identity provider'
+
+Conditions:
+  MakeProvider: !Equals [!Ref CreateOidcProvider, "true"]
+
+Resources:
+  GitHubOidcProvider:
+    Type: AWS::IAM::OIDCProvider
+    Condition: MakeProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList: [sts.amazonaws.com]
+
+  DeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Assumed by GitHub Actions to deploy OrderFlow (main branch only)
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                # Only the "aws" environment of the main branch of this one repository.
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:aws"
+      ManagedPolicyArns:
+        # Everything except IAM and account management: enough for EC2, RDS, S3, SES, Scheduler, Budgets, CloudFormation, SSM.
+        - arn:aws:iam::aws:policy/PowerUserAccess
+      Policies:
+        - PolicyName: manage-orderflow-roles
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # IAM only for the roles and instance profile that the OrderFlow stack itself creates (their names start with the stack name).
+              - Effect: Allow
+                Action:
+                  - iam:GetRole
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:UpdateRole
+                  - iam:TagRole
+                  - iam:UntagRole
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:GetRolePolicy
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:UpdateAssumeRolePolicy
+                  - iam:PassRole
+                  - iam:CreateInstanceProfile
+                  - iam:DeleteInstanceProfile
+                  - iam:GetInstanceProfile
+                  - iam:AddRoleToInstanceProfile
+                  - iam:RemoveRoleFromInstanceProfile
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${AppStackName}-*"
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:instance-profile/${AppStackName}-*"
+
+Outputs:
+  DeployRoleArn:
+    Description: Put this in the GitHub repository secret AWS_DEPLOY_ROLE_ARN.
+    Value: !GetAtt DeployRole.Arn

@@ -41,6 +41,9 @@ The deck in `docs/spec/` is the source of truth. These are the places where the 
 | @anthropic-ai/sdk | The optional LLM extractor (`EXTRACTOR=llm`). Never called with default settings. |
 | typescript, tsx | The compiler, and a runner for TypeScript scripts (seed, generator, golden, replay). |
 | vitest, @playwright/test | Unit, integration and golden tests; end-to-end tests (brief). |
+| @aws-sdk/client-s3 | Stores PDFs in Amazon S3 when `STORAGE_BACKEND=s3` (`src/adapters/s3FileStore.ts`); the official AWS SDK. |
+| @aws-sdk/client-sesv2 | Sends the Outbox messages as email through Amazon SES when `NOTIFIER=ses` (`src/adapters/sesNotifier.ts`). |
+| @prisma/adapter-mariadb | Prisma's driver adapter for MySQL (it also speaks MySQL), needed to use Amazon RDS for MySQL with the Prisma 7 client. |
 | eslint, eslint-config-next | Linting with the Next.js rules. |
 | @types/* | Type definitions for Node.js, React and better-sqlite3. |
 
@@ -81,6 +84,15 @@ No UI library and no CSS framework: one hand-written stylesheet (`src/app/global
 31. **The baseline comes from the sample's own timestamps** (PO arrival, Navision creation, SPR submitted and decided, promised and actual ship dates). There is no baseline for "errors caught by hand" because the sample does not record it; the report says so instead of inventing one.
 32. **End-to-end tests run on a private copy** of the sample data in `.e2e` with their own database and port (3217), started by `npm run e2e:server` (prepare, seed, build, start). They run one after another on one seeded scenario, each on its own order or document, so a developer's demo database is never touched.
 33. **One temporary-workspace helper** (`scripts/temp-workspace.ts`) serves the integration tests and the replay, so both build their world exactly the same way.
+34. **AWS for stories 3 and 4 (added 25 Nov 2026, after the team pointed to the IT3120 rubrics in docs/spec).** The original brief said "do not implement AWS"; the Week 9, 16 and 19 rubrics grade managed cloud services, persistence, infrastructure as code and CI/CD. The team chose: their own AWS account; S3, SES, RDS for MySQL and EventBridge Scheduler; CloudFormation; both stories together.
+35. **Local stays the default.** Every AWS adapter is chosen by a setting; with none set, the app, the tests and the demo run exactly as before. So the 600-odd tests keep running without an AWS account, and AWS adapters are tested with fake clients.
+36. **One EC2 server, not containers or Lambda.** A long-running Next.js server with server actions fits a plain server; the team can log in (Session Manager) and read logs. App Runner or ECS would add an image pipeline to learn.
+37. **Two Prisma clients from one schema.** Prisma fixes the database type when it generates a client, so `scripts/make-mysql-schema.mjs` writes `prisma/mysql/schema.prisma` from `prisma/schema.prisma` (long text columns become LONGTEXT) and both clients are generated on install. A test fails if the MySQL copy is stale. `createDb()` picks the client from `DATABASE_URL`.
+38. **The scheduler reaches the app through Systems Manager, not over the network.** EventBridge Scheduler calls `ssm:SendCommand`, which runs `orderflow-run-jobs` on the server; that calls `POST /api/jobs/run` on localhost with a secret from Secrets Manager. No Lambda, no VPC endpoint, and the jobs endpoint is never exposed. It is the one route handler that is neither an upload nor a download.
+39. **SES writes the Outbox row first, then emails.** The row stays the audit trail and the de-duplication key; the email result (`deliveredAt` or `deliveryError`) is stored on it. A refused email never loses the message or undoes the work that sent it. Drafts are emailed only when a person clicks Send.
+40. **All email goes to one test inbox (`SES_TEST_RECIPIENT`).** The staff and customer addresses in the sample data are invented, and a new SES account can only send to verified addresses. The real recipient is named at the top of each test email.
+41. **The seed refuses MySQL unless given `--reset-mysql`.** It empties every table; a `DATABASE_URL` left over in a terminal must never wipe another database. The server seeds once, on first boot.
+42. **TLS to the database is required and checked.** RDS has `require_secure_transport` on; the app's MySQL driver checks the certificate against the RDS bundle (`NODE_EXTRA_CA_CERTS`); Prisma's migration tool gets `sslaccept=strict&sslcert=...` in `DATABASE_URL` (tested against MySQL 8.4 in Docker: without these parameters Prisma does not use TLS).
 
 ## Repository
 

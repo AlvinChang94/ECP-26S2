@@ -19,16 +19,17 @@ Run one file or one test while working: `npx vitest run src/domain/shipment` or 
 
 ## Results
 
-Obtained on 17 November 2026 on Windows 11, Node.js 22.15:
+Obtained on 25 November 2026 on Windows 11, Node.js 22.15 (after adding the AWS version):
 
 | Check | Result |
 |---|---|
 | `npm run typecheck` | clean |
 | `npm run lint` | clean |
-| `npm test` | 575 of 575 tests passed in 32 files |
+| `npm test` | 599 of 599 tests passed in 33 files |
 | `npm run test:golden` | 44 of 44 cases passed. Extraction: document type 75/75, fields 812/812. Rules: every expected flag found, no unexpected flag |
 | `npm run test:e2e` | 12 of 12 passed |
-| `npm run replay` | 60 orders and 20 receipts replayed; 36 of 36 seeded errors flagged, 0 findings that were not seeded |
+| `cfn-lint` (both templates, ap-southeast-1 and ap-southeast-2) | no errors |
+| `npm run replay` (17 November) | 60 orders and 20 receipts replayed; 36 of 36 seeded errors flagged, 0 findings that were not seeded |
 
 The extraction figures are for **our own synthetic PDFs**, which the default reader was written for. They say nothing about Spectra's real documents. When Spectra's samples arrive, add them to the golden dataset (see [data/README.md](../data/README.md)) and expect lower numbers at first.
 
@@ -91,6 +92,7 @@ Tests never share state and never touch `storage/` or `data/navision/export`. Sh
 | `shipments.test.ts` | Story 5 |
 | `orderDashboard.test.ts` | Story 6, on the full seeded demo scenario (ORD-1042 blocked), plus ship-date alerts |
 | `replay.test.ts` | The KPI replay's staff rules, and a short replay through the real services |
+| `awsAdapters.test.ts` | The AWS pieces without an AWS account: `S3FileStore` and `SesNotifier` with fake AWS clients (test recipient, de-duplication, drafts emailed only when sent, a refused email recorded not lost), the AWS settings and their error messages, the jobs endpoint's secret, and that the MySQL schema is up to date |
 
 ### 4. Invariant tests: the design principles
 
@@ -130,6 +132,15 @@ So the tests never touch your demo database, and they can run while `npm run dev
 
 `npm run replay` ([scripts/replay-runner.ts](../scripts/replay-runner.ts)) runs the six-month synthetic history in `data/replay` through the real services on a simulated clock, with simulated staff, and prints four measures against the sample's baseline: order-processing time, error rate, approval turnaround and overdue orders. The report says plainly that the data is synthetic and the staff are simulated, and lists every simulated delay. The report is saved to `reports/kpi-replay.txt`. Change a delay with `npm run replay -- --set reviewMinutes=45`.
 
+### 7. Continuous integration and the AWS checks
+
+[.github/workflows/ci.yml](../.github/workflows/ci.yml) runs on every push and pull request: typecheck, lint, `npm test`, the golden test, the Playwright tests, `cfn-lint` on both CloudFormation templates, and a syntax check of the server scripts. The deploy job runs only after all of them pass ([AWS_DEPLOY.md](AWS_DEPLOY.md)).
+
+Checked by hand when the AWS version was built (25 November 2026):
+- `cfn-lint` on `infra/orderflow.yaml` and `infra/github-deploy-role.yaml` for ap-southeast-1 and ap-southeast-2: no errors.
+- MySQL 8.4 in Docker with `require_secure_transport=ON`: the MySQL migration applied over TLS; without the `sslaccept`/`sslcert` parameters Prisma refused (no TLS), which is why the server's `DATABASE_URL` carries them. The full demo seed (109 steps, all six stories) then ran on MySQL, the order dashboard matched the SQLite result exactly, and `POST /api/jobs/run` refused a missing or wrong secret and ran with the right one.
+- Not yet checked: a real deployment to AWS (S3, SES and the scheduler against the real services). That is row A1 of [MANUAL_TEST.md](MANUAL_TEST.md).
+
 ## Writing a new test
 
 - **A new rule** goes in `src/domain` with a table-driven test next to it. Write the test first.
@@ -140,5 +151,6 @@ So the tests never touch your demo database, and they can run while `npm run dev
 
 ## What is not tested automatically
 
+- The real AWS services (they are tested with fake clients; the end-to-end check is a deployment, see MANUAL_TEST.md rows A1 to A5).
 - The LLM extractor and the LLM rewording against the real Anthropic API (they are tested with a fake model; running them needs an API key and costs money).
 - How the pages look, and anything about a real Navision, a real mailbox or WhatsApp. These are in [MANUAL_TEST.md](MANUAL_TEST.md) or are out of scope for the POC.

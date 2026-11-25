@@ -1,6 +1,6 @@
 // What: the FileStore interface (where PDF bytes are kept) and a local-folder implementation.
 // Who calls it: the intake service saves uploads; the download route handler and extractors read them back.
-// To extend: write an S3FileStore with the same three methods (see docs/AWS_MAPPING.md) and return it from getDeps().
+// To extend: S3FileStore (s3FileStore.ts) is the AWS version; getDeps() picks one from STORAGE_BACKEND.
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 

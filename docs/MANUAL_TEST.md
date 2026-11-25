@@ -38,3 +38,14 @@ What to check by hand before a demo or a hand-over, one row per acceptance crite
 | M4 | A clean clone works from the README alone | In a new folder: `git clone`, `npm install`, `npm run seed`, `npm run dev`. | The app opens at http://localhost:3000 with the demo data. No API key or AWS account asked for. | manual only |
 | M5 | The LLM extractor (optional) | Put `EXTRACTOR=llm` and `ANTHROPIC_API_KEY=...` in `.env`, restart, upload a PO; run `npm run test:golden`. | Same fields as the default reader on our samples; a value the model cannot point to in the PDF text is not used. This costs API credits. | Fake-model tests in `src/adapters/extractor/extractor.test.ts` only |
 | M6 | The KPI replay report | `npm run replay`. | Four measures printed and saved to `reports/kpi-replay.txt`; the first lines say the data is synthetic and the staff simulated. | `tests/integration/replay.test.ts` (short replay) |
+
+## On AWS (after deploying with docs/AWS_DEPLOY.md)
+
+| # | What | Steps | Expected result | Automated |
+|---|---|---|---|---|
+| A1 | The stack builds a working app | Deploy `infra/orderflow.yaml`; click the SES verification emails; open the `AppUrl` output. | The stack completes (it waits for the app to answer); the sign-in page opens from your IP and not from another network. | `cfn-lint` in CI only |
+| A2 | Story 3 by email (SES) | As Priya submit an SPR. Open `DemoInbox`, click the link, approve. | "[OrderFlow test] ... approval needed" arrives naming Janet as the real recipient; the link opens the app without a login; Priya's decision email arrives. Outbox shows "Emailed". | `tests/integration/awsAdapters.test.ts` (fake SES) |
+| A3 | Story 3 reminders (EventBridge Scheduler) | Leave an SPR undecided and press "+24 h", or wait for the next 5-minute run. | The 24-hour reminder email arrives once, not again on later runs. Systems Manager, Run Command history shows a run every 5 minutes. | `tests/integration/spr.test.ts` (the rules) |
+| A4 | Story 4 (S3 and SES) | Upload a proof of payment; as Farah confirm ORD-1034; send ORD-1036's reminder draft. | The PDF appears in the S3 bucket under `documents/`; the warehouse email arrives; the reminder is emailed only after Send. | `tests/integration/awsAdapters.test.ts` (fake S3 and SES) |
+| A5 | Data survives a restart (RDS) | Stop and start the EC2 instance (or reboot it); open the app again. | Same orders, SPRs and Outbox as before; same URL (Elastic IP). | manual only |
+

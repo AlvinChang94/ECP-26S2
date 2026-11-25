@@ -18,9 +18,26 @@ const EnvSchema = z.object({
   // Alert windows. Whole numbers written as text, for example "48".
   DOCUMENT_ALERT_WINDOW_HOURS: z.coerce.number().int().min(1).max(720).default(48),
   SHIP_DATE_ALERT_DAYS: z.coerce.number().int().min(0).max(60).default(2),
+  // AWS (docs/AWS_DEPLOY.md). Every value has a local default, so nothing here is needed on a laptop.
+  AWS_REGION: z.string().default("ap-southeast-1"),
+  STORAGE_BACKEND: z.enum(["local", "s3"]).default("local"),
+  S3_BUCKET: z.string().optional(),
+  NOTIFIER: z.enum(["outbox", "ses"]).default("outbox"),
+  SES_FROM_ADDRESS: z.string().email().optional(),
+  SES_TEST_RECIPIENT: z.string().email().optional(),
+  DATABASE_SSL: z.enum(["true", "false"]).default("false"),
+  JOBS_SECRET: z.string().min(16).optional(),
 });
 
 export type AppConfig = {
+  /** Where PDFs are kept: a local folder (storageDir) or an Amazon S3 bucket. */
+  storage: { backend: "local" } | { backend: "s3"; bucket: string; region: string };
+  /** How messages leave: only the Outbox table, or the Outbox table plus email through Amazon SES. */
+  notifier: { kind: "outbox" } | { kind: "ses"; region: string; fromAddress: string; testRecipient: string | null };
+  /** True for Amazon RDS: connect to MySQL over TLS (the RDS certificate bundle is given with NODE_EXTRA_CA_CERTS). */
+  databaseSsl: boolean;
+  /** Shared secret that EventBridge Scheduler's call to /api/jobs/run must send. Null = the endpoint is switched off. */
+  jobsSecret: string | null;
   /** Absolute path of the SQLite file, or a full connection URL once the database is MySQL. */
   databaseUrl: string;
   navisionDir: string;
@@ -70,9 +87,24 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     SHOW_MARGIN: env.SHOW_MARGIN || undefined,
     DOCUMENT_ALERT_WINDOW_HOURS: env.DOCUMENT_ALERT_WINDOW_HOURS || undefined,
     SHIP_DATE_ALERT_DAYS: env.SHIP_DATE_ALERT_DAYS || undefined,
+    AWS_REGION: env.AWS_REGION || undefined,
+    STORAGE_BACKEND: env.STORAGE_BACKEND || undefined,
+    S3_BUCKET: env.S3_BUCKET || undefined,
+    NOTIFIER: env.NOTIFIER || undefined,
+    SES_FROM_ADDRESS: env.SES_FROM_ADDRESS || undefined,
+    SES_TEST_RECIPIENT: env.SES_TEST_RECIPIENT || undefined,
+    DATABASE_SSL: env.DATABASE_SSL || undefined,
+    JOBS_SECRET: env.JOBS_SECRET || undefined,
   });
+  // Settings that only make sense together. A clear message here beats a confusing AWS error later.
+  if (parsed.STORAGE_BACKEND === "s3" && !parsed.S3_BUCKET) throw new Error("STORAGE_BACKEND=s3 needs S3_BUCKET (the bucket name from the CloudFormation outputs).");
+  if (parsed.NOTIFIER === "ses" && !parsed.SES_FROM_ADDRESS) throw new Error("NOTIFIER=ses needs SES_FROM_ADDRESS (an email address verified in Amazon SES).");
+  const databaseUrl = resolveDatabaseUrl(rootDir, parsed.DATABASE_URL);
+  if (!databaseUrl.startsWith("file:") && !databaseUrl.startsWith("mysql://")) {
+    throw new Error('DATABASE_URL must start with "file:" (SQLite on this computer) or "mysql://" (Amazon RDS). A value set in your terminal wins over .env.');
+  }
   return {
-    databaseUrl: resolveDatabaseUrl(rootDir, parsed.DATABASE_URL),
+    databaseUrl,
     navisionDir: absolute(rootDir, parsed.NAVISION_DIR),
     inboxDir: absolute(rootDir, parsed.INBOX_DIR),
     storageDir: absolute(rootDir, parsed.STORAGE_DIR),
@@ -88,5 +120,12 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     latePaymentAfterDays: 7,
     shipDateAlertDays: parsed.SHIP_DATE_ALERT_DAYS,
     suggestedShipLeadDays: 7,
+    storage: parsed.STORAGE_BACKEND === "s3" ? { backend: "s3", bucket: parsed.S3_BUCKET as string, region: parsed.AWS_REGION } : { backend: "local" },
+    notifier:
+      parsed.NOTIFIER === "ses"
+        ? { kind: "ses", region: parsed.AWS_REGION, fromAddress: parsed.SES_FROM_ADDRESS as string, testRecipient: parsed.SES_TEST_RECIPIENT ?? null }
+        : { kind: "outbox" },
+    databaseSsl: parsed.DATABASE_SSL === "true",
+    jobsSecret: parsed.JOBS_SECRET ?? null,
   };
 }

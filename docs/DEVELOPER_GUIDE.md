@@ -34,19 +34,23 @@ src/
   adapters/    Everything that touches the outside world, each behind an interface
     navision/    NavisionGateway interface + FileNavisionGateway (reads data/navision/*.json)
     extractor/   DocumentExtractor interface + the default reader (no keys) + the optional LLM reader
-    db.ts        Prisma client (SQLite now, MySQL later)
+    db.ts        Prisma client: SQLite on a laptop, MySQL on AWS (chosen by DATABASE_URL)
     clock.ts     Clock interface: real, offset (the demo clock) and fake (tests, seed, replay)
-    notifier.ts  Notifier interface: the POC writes every message to the Outbox table
+    notifier.ts  Notifier interface: every message is written to the Outbox table
+    sesNotifier.ts  ...and on AWS also emailed through Amazon SES (NOTIFIER=ses)
     fileStore.ts Where uploaded PDFs are kept (storage/documents)
+    s3FileStore.ts  ...or in an Amazon S3 bucket on AWS (STORAGE_BACKEND=s3)
     config.ts    Reads environment variables once, checked with Zod
   services/    One file per use case. Gathers data through adapters, calls domain rules, records audit events.
   app/         Next.js pages, server actions and the three route handlers. Kept thin.
   components/  Small React components shared by pages (FlagCard, Timeline, PdfViewer, badges)
   generated/   Prisma's generated client. Never edit; `npm install` recreates it.
-prisma/        schema.prisma (the tables) and the SQL migration
+prisma/        schema.prisma (the tables) and the SQLite migrations; prisma/mysql/ is the generated MySQL copy and its migrations
 scripts/       seed, sample data generator, golden test runner, KPI replay, e2e preparation
 tests/         integration/, invariants/, golden/, e2e/ (Playwright), helpers/
 data/          Synthetic sample data: navision/, inbox/, seed/, golden/, replay/ (see data/README.md)
+infra/         CloudFormation templates (orderflow.yaml) and the AWS server's setup and update scripts (infra/ec2)
+.github/       The CI/CD pipeline (GitHub Actions)
 docs/          This guide and the other documents listed in the README
 storage/       Created at run time: the SQLite database and uploaded PDFs (not in git)
 ```
@@ -134,7 +138,8 @@ The function runs on the server. `runAction()` redirects back with `?notice=` (g
 **Route handlers (`route.ts`).** Exported `GET` or `POST` functions that return a `Response`. We use them only where a page or a server action is awkward:
 - [api/documents/upload/route.ts](../src/app/api/documents/upload/route.ts): a plain multipart form post with a file;
 - [api/documents/[id]/file/route.ts](../src/app/api/documents/[id]/file/route.ts): sends PDF bytes with the right `Content-Type` for the viewer;
-- [api/orders/[orderNo]/pi/route.ts](../src/app/api/orders/[orderNo]/pi/route.ts): builds and downloads the proforma invoice PDF.
+- [api/orders/[orderNo]/pi/route.ts](../src/app/api/orders/[orderNo]/pi/route.ts): builds and downloads the proforma invoice PDF;
+- [api/jobs/run/route.ts](../src/app/api/jobs/run/route.ts): runs the due jobs when EventBridge Scheduler calls on AWS (protected by a shared secret, switched off on a laptop).
 
 Everything else is a page plus server actions.
 
@@ -269,7 +274,7 @@ The sample POs already print "Delivery required by" (layout A) or "Required by" 
      };
    }
    ```
-3. In the service where it happens: `await deps.notifier.send(buildCustomerCardCreated(recipient, {...}))`.
+3. In the service where it happens: `await deps.notifier.send(buildCustomerCardCreated(recipient, {...}))`. On AWS (`NOTIFIER=ses`) the same call also emails it; drafts are emailed only when a person sends them.
 4. If it should be sent when something *becomes due* rather than when someone clicks, write a sweep `(deps, now) => Promise<string[]>` and add it to `SWEEPS` in [src/services/jobs.ts](../src/services/jobs.ts). Use a `dedupeKey`, because sweeps run again and again. Look at `documentDueAlertSweep` in [src/services/shipments.ts](../src/services/shipments.ts) as an example.
 
 **See it:** the Outbox page's type filter lists the new label automatically.
@@ -314,18 +319,22 @@ The rest of the app only knows the `NavisionGateway` interface in [src/adapters/
 
 **See it:** set `NAVISION_MODE=api` in `.env`, restart `npm run dev`, open an order's review page: lookups now come from the API.
 
-### 3.9 Move from SQLite to MySQL (RDS)
+### 3.9 Change the database tables (SQLite and MySQL)
 
-The schema was written to be portable: money is a decimal string, no enums, no JSON columns, no database-generated timestamps.
+The app runs on SQLite on a laptop and on MySQL (Amazon RDS) on AWS. There is **one** schema to edit, [prisma/schema.prisma](../prisma/schema.prisma); `prisma/mysql/schema.prisma` is generated from it. Each database has its own migration folder, so a table change needs one migration for each.
 
-1. [prisma/schema.prisma](../prisma/schema.prisma): set `provider = "mysql"` and add `@db.Text` to every field whose comment says "LONG TEXT".
-2. Install Prisma's MySQL/MariaDB driver adapter: `npm install @prisma/adapter-mariadb` (record the reason in [docs/DECISIONS.md](DECISIONS.md)). Check the Prisma documentation for its current options.
-3. [src/adapters/db.ts](../src/adapters/db.ts): create the client with that adapter instead of `PrismaBetterSqlite3`. Nothing else imports the database driver.
-4. Migrations: the SQL in `prisma/migrations` is SQLite SQL. Create a MySQL one with `npx prisma migrate diff --from-empty --to-schema prisma/schema.prisma --script -o prisma/migrations/<date>_mysql_init/migration.sql` (move the SQLite folder aside first).
-5. `DATABASE_URL="mysql://user:password@host:3306/orderflow"` in `.env`. `npm run seed` runs `prisma migrate deploy` and works unchanged.
-6. Tests: `createTablesFromMigrations()` (used by the test workspaces) creates SQLite files. Keep the tests on SQLite (they test our rules, not the database), or point them at a MySQL test database.
+1. Edit `prisma/schema.prisma`. Keep it portable: money as a decimal string, no enums, no `@default(now())`. Mark a text field that can be long with the comment `// LONG TEXT` (it becomes LONGTEXT on MySQL; a plain `String` is limited to 191 characters there).
+2. `npm install` (or `node scripts/make-mysql-schema.mjs && npx prisma generate && npx prisma generate --config prisma.mysql.config.ts`) regenerates the MySQL schema and both clients. A test fails if you forget.
+3. SQLite migration: a new folder `prisma/migrations/<yyyymmddhhmmss>_<what>/migration.sql`, for example `ALTER TABLE "OutboxMessage" ADD COLUMN "deliveredAt" DATETIME;` (see `20261125000000_outbox_delivery`).
+4. MySQL migration, written by Prisma from the difference between the old and the new MySQL schema (no database needed):
+   ```bash
+   git show HEAD:prisma/mysql/schema.prisma > old-mysql.prisma
+   npx prisma migrate diff --from-schema old-mysql.prisma --to-schema prisma/mysql/schema.prisma --script      -o prisma/mysql/migrations/<yyyymmddhhmmss>_<what>/migration.sql --config prisma.mysql.config.ts
+   rm old-mysql.prisma
+   ```
+5. `npm test` (the tests build their SQLite databases from `prisma/migrations`). On AWS, `orderflow-update` applies the MySQL migration (`prisma migrate deploy --config prisma.mysql.config.ts`).
 
-**See it:** `npm run seed` then `npm run dev` against the MySQL database.
+To try MySQL on a laptop: start one (for example `docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=... -e MYSQL_DATABASE=orderflow mysql:8.4`), set `DATABASE_URL="mysql://root:...@localhost:3307/orderflow"` in the terminal, and run `npx tsx scripts/seed.ts --reset-mysql`. The seed refuses MySQL without that flag, because it empties every table.
 
 ---
 

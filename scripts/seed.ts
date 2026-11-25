@@ -19,14 +19,17 @@ async function main(): Promise<void> {
     // no .env file: fine
   }
   const config = loadConfig();
-  // The schema is SQLite. A DATABASE_URL set in the terminal wins over .env, so say clearly where a wrong one comes from.
-  if (!config.databaseUrl.startsWith("file:")) {
+  // config.ts only accepts file: (SQLite) or mysql:// (Amazon RDS). A DATABASE_URL set in the terminal wins over .env,
+  // so a wrong one is usually left over from another project: say so plainly.
+  const mysql = config.databaseUrl.startsWith("mysql://");
+  console.log(`Database: ${mysql ? config.databaseUrl.replace(/\/\/[^@]*@/, "//***@") : config.databaseUrl} (${mysql ? "MySQL" : "SQLite"}).`);
+  // The seed empties every table. On MySQL that must be asked for explicitly, so a DATABASE_URL left over from another
+  // project (set in the terminal, which wins over .env) can never wipe that project's database.
+  if (mysql && !process.argv.includes("--reset-mysql")) {
     console.error(
-      `DATABASE_URL is "${config.databaseUrl.replace(/\/\/[^@]*@/, "//***@")}", but this app uses a SQLite file (it must start with "file:").\n` +
-        "A value set in your terminal overrides .env. Clear it and try again:\n" +
-        "  Command Prompt:  set DATABASE_URL=\n" +
-        "  PowerShell:      Remove-Item Env:DATABASE_URL\n" +
-        "  Git Bash:        unset DATABASE_URL",
+      "DATABASE_URL points at a MySQL database. The seed empties every table, so it only runs on MySQL with --reset-mysql\n" +
+        "(the AWS server does this once on first start). On a laptop you normally want SQLite: clear DATABASE_URL in your terminal\n" +
+        "(Command Prompt: set DATABASE_URL=   PowerShell: Remove-Item Env:DATABASE_URL) so .env is used.",
     );
     process.exit(1);
   }
@@ -41,8 +44,12 @@ async function main(): Promise<void> {
   }
 
   // 2. Database: create the file and tables if needed (Prisma keeps the migration history), then empty every table.
-  if (config.databaseUrl.startsWith("file:")) mkdirSync(path.dirname(config.databaseUrl.slice("file:".length)), { recursive: true });
-  execSync("npx prisma migrate deploy", { stdio: "inherit", env: { ...process.env, DATABASE_URL: config.databaseUrl } });
+  if (!mysql) mkdirSync(path.dirname(config.databaseUrl.slice("file:".length)), { recursive: true });
+  // MySQL has its own migrations (prisma/mysql), generated from the same models.
+  execSync(mysql ? "npx prisma migrate deploy --config prisma.mysql.config.ts" : "npx prisma migrate deploy", {
+    stdio: "inherit",
+    env: { ...process.env, DATABASE_URL: config.databaseUrl },
+  });
 
   const clock = new FakeClock(DEMO_NOW);
   const deps = buildDeps(config, clock);
@@ -65,7 +72,8 @@ async function main(): Promise<void> {
   await db.appSetting.deleteMany();
   console.log("2. Database emptied.");
 
-  // 3. Uploaded files and everything the app wrote for Navision.
+  // 3. Uploaded files and everything the app wrote for Navision. (With S3 the old PDFs stay in the bucket: they are stored
+  //    under their content hash, so the seed simply writes the same objects again.)
   rmSync(path.join(config.storageDir, "documents"), { recursive: true, force: true });
   const exportDir = path.join(config.navisionDir, "export");
   if (existsSync(exportDir)) {

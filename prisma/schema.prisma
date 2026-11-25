@@ -1,6 +1,6 @@
-// What: the database tables of the OrderFlow POC (SQLite now, RDS MySQL later).
+// What: the database tables of the OrderFlow POC (SQLite on a laptop; the MySQL copy for Amazon RDS is generated from this file).
 // Who calls it: `prisma generate` (typed client in src/generated/prisma) and `prisma migrate` (SQL in prisma/migrations).
-// To extend: add a model or field, then run `npx prisma migrate dev --name what_changed`. See docs/DEVELOPER_GUIDE.md.
+// To extend: add a model or field, then follow docs/DEVELOPER_GUIDE.md recipe 3.9 (one migration for SQLite, one for MySQL).
 //
 // Rules that keep this schema portable to MySQL:
 //  - Money is a decimal STRING ("12.40"), never Float. Code uses decimal.js (src/domain/money.ts).
@@ -21,7 +21,7 @@ datasource db {
 model Document {
   id                 String    @id @default(cuid())
   fileKey            String // where the PDF bytes live in the FileStore
-  fileName           String
+  fileName           String // LONG TEXT. As sent or uploaded; names can be long
   sha256             String // fingerprint of the bytes, used to spot the same file arriving twice
   channel            String // upload | email | whatsapp (email and WhatsApp are simulated by the Inbox)
   sender             String?
@@ -123,7 +123,7 @@ model FlagDecision {
   kind        String // override | resolution
   flagCode    String
   field       String
-  fingerprint String // identifies the exact finding (code + field + values), so a changed value needs a new decision
+  fingerprint String // LONG TEXT. Identifies the exact finding (code + field + values), so a changed value needs a new decision
   reason      String // LONG TEXT
   byName      String
   byRole      String
@@ -221,7 +221,7 @@ model OutboxMessage {
   type       String // see src/domain/notifications.ts for the list
   toName     String
   toAddress  String
-  subject    String
+  subject    String // LONG TEXT
   body       String // LONG TEXT
   status     String // draft (a person must review and click Send) | sent
   sentAt     DateTime?
@@ -230,6 +230,8 @@ model OutboxMessage {
   entityId   String?
   orderNo    String?
   dedupeKey  String?   @unique // set for reminders so the same one is never written twice
+  deliveredAt   DateTime? // when Amazon SES accepted the email; null when the message only lives in the Outbox (local mode)
+  deliveryError String? // LONG TEXT. Why SES could not send it; the Outbox row is kept either way
 
   @@index([type])
   @@index([orderNo])

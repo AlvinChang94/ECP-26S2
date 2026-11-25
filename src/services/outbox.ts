@@ -28,10 +28,10 @@ export function notificationLabel(type: string): string {
 
 /**
  * Sends a draft: a person has reviewed (and possibly edited) the text and clicked Send.
- * In the POC "sent" means the status changes in the Outbox; no email leaves this machine.
+ * Locally "sent" means the status changes in the Outbox; with NOTIFIER=ses the email is then sent through Amazon SES.
  */
 export async function sendDraft(
-  deps: Pick<Deps, "db" | "clock">,
+  deps: Pick<Deps, "db" | "clock" | "notifier">,
   actor: Actor,
   messageId: number,
   edited: { subject: string; body: string },
@@ -45,6 +45,7 @@ export async function sendDraft(
     where: { id: messageId },
     data: { subject: edited.subject.trim(), body: edited.body.trim(), status: "sent", sentAt: now, sentBy: actor.name },
   });
+  await deps.notifier.deliver(messageId);
   await recordAudit(deps, {
     actor,
     action: "payment_reminder_sent",

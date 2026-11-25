@@ -1,0 +1,116 @@
+# What: the CI/CD pipeline. On every push and pull request: typecheck, lint, unit/integration/golden tests, end-to-end tests,
+#       and a check of the CloudFormation template. On a push to main, when deployment is switched on: deploy to AWS.
+# Who calls it: GitHub Actions, automatically.
+# To extend: add a step to the right job. To switch deployment on, follow docs/AWS_DEPLOY.md "Continuous deployment".
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Typecheck, lint, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      # The tests read the synthetic sample data committed in data/ and build their own temporary databases.
+      - run: npm test
+      - run: npm run test:golden
+
+  e2e:
+    name: End-to-end tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # Prepares its own copy of the data, seeds it, builds and starts the app (playwright.config.ts).
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7
+
+  infrastructure:
+    name: CloudFormation template check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install cfn-lint
+      - run: cfn-lint infra/orderflow.yaml infra/github-deploy-role.yaml
+      - run: bash -n infra/ec2/setup.sh infra/ec2/update.sh infra/ec2/run-jobs.sh
+
+  deploy:
+    name: Deploy to AWS
+    # Only after every check passed, only for main, and only once the repository variable DEPLOY_ENABLED is "true".
+    needs: [test, e2e, infrastructure]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: aws
+    permissions:
+      contents: read
+      id-token: write # lets GitHub sign in to AWS with a short-lived role instead of stored keys
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Update the infrastructure (no change, no work)
+        run: |
+          aws cloudformation deploy \
+            --stack-name "${{ vars.STACK_NAME }}" \
+            --template-file infra/orderflow.yaml \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              AllowedCidr="${{ vars.ALLOWED_CIDR }}" \
+              SenderEmail="${{ vars.SENDER_EMAIL }}" \
+              DemoInbox="${{ vars.DEMO_INBOX }}" \
+              RepoBranch=main
+      - name: Update the app on the server
+        run: |
+          instance=$(aws cloudformation describe-stacks --stack-name "${{ vars.STACK_NAME }}" \
+            --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" --output text)
+          command=$(aws ssm send-command --instance-ids "$instance" --document-name AWS-RunShellScript \
+            --comment "Deploy ${GITHUB_SHA::7}" --parameters 'commands=["/usr/local/bin/orderflow-update"]' \
+            --timeout-seconds 1800 --query Command.CommandId --output text)
+          # Installing and building takes a few minutes: check every 15 seconds, for up to 30 minutes.
+          for attempt in $(seq 1 120); do
+            sleep 15
+            status=$(aws ssm get-command-invocation --command-id "$command" --instance-id "$instance" --query Status --output text 2>/dev/null || echo Pending)
+            case "$status" in Pending|InProgress|Delayed) continue ;; *) break ;; esac
+          done
+          aws ssm get-command-invocation --command-id "$command" --instance-id "$instance" \
+            --query '[Status, StandardOutputContent, StandardErrorContent]' --output text
+          test "$status" = "Success"

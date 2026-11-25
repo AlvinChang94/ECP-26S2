@@ -10,7 +10,7 @@ data/inbox/           PDFs waiting in the simulated email / WhatsApp inbox (+ ma
 data/seed/            PDFs the seed loads to build the demo history (ORD-1042 and friends)
 data/golden/          cases.json + context.json + files/ (expected type, fields, flags per sample PDF)
 data/replay/          60 orders over 6 simulated months for the KPI replay
-prisma/               schema.prisma (SQLite now, MySQL later) + migrations
+prisma/               schema.prisma (SQLite) + migrations; prisma/mysql/ generated MySQL copy for RDS
 scripts/              generate-sample-data, seed, run-golden, replay, copy-pdf-worker
 src/domain/           pure rules and types (no file, database, network or clock access)
 src/adapters/         Clock, FileStore, NavisionGateway, DocumentExtractor, Notifier, db client, config

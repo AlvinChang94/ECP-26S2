@@ -80,8 +80,18 @@ export default async function OutboxPage(props: PageProps<"/outbox">) {
                   </details>
                 </td>
                 <td>
+                  {/* Locally a message only lives here. On AWS (NOTIFIER=ses) it is also emailed, and the result is shown. */}
                   {message.status === "draft" ? (
                     <span className="badge badge-warning">Draft: needs review</span>
+                  ) : message.deliveredAt ? (
+                    <span className="badge badge-ok" title={`Accepted by Amazon SES on ${formatDateTime(message.deliveredAt)}`}>
+                      Emailed
+                    </span>
+                  ) : message.deliveryError ? (
+                    <>
+                      <span className="badge badge-blocking">Email not sent</span>
+                      <div className="muted small">{message.deliveryError}</div>
+                    </>
                   ) : (
                     <span className="badge badge-ok">Written to Outbox</span>
                   )}

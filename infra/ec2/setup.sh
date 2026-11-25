@@ -79,17 +79,40 @@ if [ ! -f /etc/orderflow/seeded ]; then
 fi
 as_app "npm run build"
 
-# 8. The app as a service (starts on boot, restarts if it stops) and the helper commands. Shared with update.sh.
-# shellcheck disable=SC1091
-source "$APP_DIR/infra/ec2/service.sh"
-write_service
-install_helpers
+# 8. The app as a service: starts on boot, restarts if it stops.
+cat > /etc/systemd/system/orderflow.service <<UNIT
+[Unit]
+Description=Spectra OrderFlow proof of concept
+After=network-online.target
+
+[Service]
+User=orderflow
+WorkingDirectory=$APP_DIR
+Environment=NODE_ENV=production
+Environment=NODE_EXTRA_CA_CERTS=$RDS_CA
+Environment=PATH=/opt/node/bin:/usr/bin:/bin
+ExecStart=/opt/node/bin/npm start -- -p 3000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+# 9. The command EventBridge Scheduler runs (through Systems Manager) every few minutes.
+install -m 755 "$APP_DIR/infra/ec2/run-jobs.sh" /usr/local/bin/orderflow-run-jobs
+install -m 755 "$APP_DIR/infra/ec2/update.sh" /usr/local/bin/orderflow-update
+
+systemctl daemon-reload
 systemctl enable --now orderflow
 
-# 9. Wait until the app answers before reporting success to CloudFormation.
-if wait_for_app; then
-  echo "== $(date -u +%FT%TZ) OrderFlow is running at $APP_BASE_URL"
-  exit 0
-fi
-echo "OrderFlow did not answer on port $APP_PORT. See: journalctl -u orderflow" >&2
+# 10. Wait until the app answers before reporting success to CloudFormation.
+for attempt in $(seq 1 60); do
+  if curl -fsS -o /dev/null http://127.0.0.1:3000/sign-in; then
+    echo "== $(date -u +%FT%TZ) OrderFlow is running at $APP_BASE_URL"
+    exit 0
+  fi
+  sleep 5
+done
+echo "OrderFlow did not answer on port 3000. See: journalctl -u orderflow" >&2
 exit 1

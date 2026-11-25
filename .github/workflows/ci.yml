@@ -67,7 +67,7 @@ jobs:
           python-version: "3.12"
       - run: pip install cfn-lint
       - run: cfn-lint infra/orderflow.yaml infra/github-deploy-role.yaml
-      - run: bash -n infra/ec2/setup.sh infra/ec2/update.sh infra/ec2/run-jobs.sh infra/ec2/service.sh
+      - run: bash -n infra/ec2/setup.sh infra/ec2/update.sh infra/ec2/run-jobs.sh
 
   deploy:
     name: Deploy to AWS

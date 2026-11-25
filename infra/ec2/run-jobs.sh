@@ -4,7 +4,6 @@
 # To extend: the jobs themselves are runDueJobs() in src/services/jobs.ts; this only calls /api/jobs/run on this server.
 set -euo pipefail
 
-port=$(grep '^APP_PORT=' /etc/orderflow/stack.env | cut -d= -f2- || true)
 secret=$(grep '^JOBS_SECRET=' /opt/orderflow/app/.env | cut -d= -f2- | tr -d '"')
-curl -fsS --max-time 50 -X POST -H "x-orderflow-jobs-secret: $secret" "http://127.0.0.1:${port:-80}/api/jobs/run"
+curl -fsS --max-time 50 -X POST -H "x-orderflow-jobs-secret: $secret" http://127.0.0.1:3000/api/jobs/run
 echo

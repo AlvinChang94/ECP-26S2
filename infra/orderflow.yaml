@@ -46,6 +46,12 @@ Parameters:
     Default: "false"
     AllowedValues: ["true", "false"]
     Description: '"true" keeps a standby database in a second Availability Zone (about double the database cost). Off for the demo.'
+  DbBackupRetentionDays:
+    Type: Number
+    Default: 1
+    MinValue: 0
+    MaxValue: 35
+    Description: Days of automated database backups. 1 suits the AWS free plan (it refuses longer retention); 7 or more on a paid plan.
   JobsRate:
     Type: String
     Default: rate(5 minutes)
@@ -201,7 +207,7 @@ Resources:
       EngineVersion: "8.4"
       DBInstanceClass: !Ref DbInstanceClass
       AllocatedStorage: "20"
-      StorageType: gp3
+      StorageType: gp2 # the storage type the free tier covers
       StorageEncrypted: true
       DBName: orderflow
       MasterUsername: orderflow_admin
@@ -212,7 +218,7 @@ Resources:
       DBParameterGroupName: !Ref DbParameterGroup
       PubliclyAccessible: false
       MultiAZ: !If [UseMultiAz, true, false]
-      BackupRetentionPeriod: 7
+      BackupRetentionPeriod: !Ref DbBackupRetentionDays
       CopyTagsToSnapshot: true
       AutoMinorVersionUpgrade: true
       DeletionProtection: false

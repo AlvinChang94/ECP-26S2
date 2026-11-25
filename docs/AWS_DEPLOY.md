@@ -11,7 +11,7 @@ The laptop version keeps working exactly as before: with no AWS settings, `npm r
 | Piece | Service | Used by |
 |---|---|---|
 | App server: Amazon Linux 2023, Node.js 22, the Next.js app as a service, fixed public IP | EC2, Elastic IP | Every story |
-| Database: MySQL 8.4, encrypted, TLS required, private subnets, 7 days of backups | RDS for MySQL | Every story |
+| Database: MySQL 8.4, encrypted, TLS required, private subnets, daily backups (1 day kept on the free plan) | RDS for MySQL | Every story |
 | PDFs (POs, proofs of payment, shipping documents): private, encrypted, versioned | S3 | Story 4 (proofs), stories 1 and 5 |
 | Email: Janet's approval link and reminders, payment reminders, the warehouse notice | SES | Stories 3 and 4 |
 | Due jobs every 5 minutes: SPR reminders at 24 and 48 hours, hand-over at 72 | EventBridge Scheduler + Systems Manager | Story 3 (and the alerts of stories 4 to 6) |
